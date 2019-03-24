@@ -1,0 +1,213 @@
+﻿@model  IEnumerable<PagedList.IPagedList<AutoProjectStatus.Models.ExecutiveStatus>>
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "Home Page";
+}
+
+
+
+
+<div class="jumbotron">
+    <h1>Automotive Project Status</h1>
+    <p class="lead">This site will be utilized to insert new project line items and update the status of existing project line items.</p>
+    
+</div>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-2 border border-primary rounded mb-3">
+            <p>To edit a project record, click on the highlighted row.</p>
+            <p><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#insertModal">Insert New Project</button></p>
+        </div>
+        
+        <div class="col-md-10">
+            <div id="tabs">
+
+                <ul class="nav nav-pills nav-justified">
+                    @{
+                        int i = 1;
+
+                        foreach (var esList in Model)
+                        {
+
+                            foreach (var es in esList)
+                            {
+                                string tabNum = "tab" + i;
+                                string hrefVal = "#" + es.CLIENT_NAME.Replace(" ", "-").ToString();
+                                <li class="nav-item" id=@tabNum><a id=@tabNum class="nav-link @hrefVal" href=@hrefVal>@es</a></li>
+                                i++;
+                            }
+
+                        }
+                    }
+                </ul>
+
+                <br>
+                <hr class="hr-double" style="border-top: 3px double #8c8b8b;">
+                <br>
+
+
+                @{
+                    int j = 1;
+                    foreach (var esList in Model)
+                    {
+                        foreach (var es in esList)
+                        {
+
+
+                            string idVal = "tab" + j;
+                        <div class="container" id=@idVal>
+
+                            <div class="table-responsive" >
+                                <table class="table-bordered table-hover" >
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>
+                                                Client Name
+                                            </th>
+                                            <th>
+                                                Project Priority
+                                            </th>
+                                            <th>
+                                                Open Status
+                                            </th>
+                                            <th>
+                                                Retail Aftersales
+                                            </th>
+                                            <th>
+                                                Project Name
+                                            </th>
+                                            <th>
+                                                Project Comments
+                                            </th>
+                                            <th>
+                                                Project Type
+                                            </th>
+                                            <th>
+                                                Start Date
+                                            </th>
+                                            <th>
+                                                Planned End Date
+                                            </th>
+                                            <th>
+                                                Actual End Date
+                                            </th>
+                                            <th>
+                                                Project Description
+                                            </th>
+                                            <th>
+                                                Project Status
+                                            </th>
+                                            <th>
+                                                Project Constraints
+                                            </th>
+                                            <th>
+                                                Schedule
+                                            </th>
+                                            <th>
+                                                Budget
+                                            </th>
+                                            <th>
+                                                Client Satisfaction
+                                            </th>
+                                            <th>
+                                                Scope
+                                            </th>
+                                            <th>
+                                                Resources
+                                            </th>
+                                            <th>
+                                                Other Risk
+                                            </th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        @foreach (var status in esList.Where(s => s.CLIENT_NAME == es.CLIENT_NAME))
+                                        {
+                                            <!--Add Edit Modal Data Toggle Attribute to tr so entire row is clickable-->
+                                            <tr style="font-size: .75rem;" data-toggle="modal" data-target="#editModal" data-seqnum="@status.SEQ_NUM">
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => status.CLIENT_NAME)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => status.PROJECT_PRIORITY)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => status.OPEN_STATUS)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => status.RETAIL_AFTERSALES)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => status.PROJECT_NAME)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => status.PROJECT_COMMENTS)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => status.PROJECT_TYPE)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => status.START_DATE)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => status.PLANNED_END_DATE)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => status.ACTUAL_END_DATE)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => status.PROJECT_DESCRIPTION)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => status.PROJECT_STATUS)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => status.PROJECT_CONSTRAINTS)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => status.SCHEDULE)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => status.BUDGET)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => status.CLIENT_SATISFACTION)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => status.SCOPE)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => status.RESOURCES)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => status.OTHER_RISK)
+                                                </td>
+                                            </tr>
+
+                                        }
+                                    </tbody>
+                                </table>
+                                Page @(Model.FirstOrDefault().PageCount < Model.FirstOrDefault().PageNumber ? 0 : Model.FirstOrDefault().PageNumber) of @Model.FirstOrDefault().PageCount
+                                @Html.PagedListPager(Model.FirstOrDefault(), page => Url.Action("Index", new { page }))
+                            </div>
+
+
+                        </div>
+                                j++;
+                            }
+                        }
+                    }
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+

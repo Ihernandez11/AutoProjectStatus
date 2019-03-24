@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @Styles.Render("/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <title>@ViewBag.Title - Automotive Project Status</title>
+
+
+
+</head>
+<body>
+    <nav class="navbar fixed-top navbar-light bg-primary">
+                    @Html.ActionLink("Automotive Project Status", "Index", "Home", new { area = "" }, new { @class = "navbar-brand text-white" })
+    </nav>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Automotive Project Status</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script src="/Scripts/main.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>
