@@ -33,17 +33,17 @@ $(document).ready(function () {
 
     //When tabs are clicked, active class should be added to li 
     //and removed from other li
-    $('#tabs li a').click(function () {
-        if ($(this).hasClass('inactive')) {
-            $('#tabs li a.active').removeClass('active');
-            $('#tabs li a').addClass('inactive');
-            $(this).removeClass('inactive');
-            $(this).addClass('active');
-            var nt = $('#tabs li a.active').attr('id');
-            $('#tabs div.container').hide();
-            $('#tabs div.container' + '#' + nt).show();
-        }
-    });
+    //$('#tabs li a').click(function () {
+    //    if ($(this).hasClass('inactive')) {
+    //        $('#tabs li a.active').removeClass('active');
+    //        $('#tabs li a').addClass('inactive');
+    //        $(this).removeClass('inactive');
+    //        $(this).addClass('active');
+    //        var nt = $('#tabs li a.active').attr('id');
+    //        $('#tabs div.container').hide();
+    //        $('#tabs div.container' + '#' + nt).show();
+    //    }
+    //});
 
 
     //$("button").click(function () {

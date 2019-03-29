@@ -19,43 +19,34 @@ namespace AutoProjectStatus.Controllers
         private AutoProjectContext db = new AutoProjectContext();
 
 
-        public ActionResult Index(int? page)
+        public ActionResult Index()
         {
 
-
             //Remove any records from viewModel where client name is null
-            List<ExecutiveStatus> allRecords = db.ExecutiveStatus.Where(x => x.CLIENT_NAME != "").ToList();
-
-            //Create a list of lists that will store each client group
-            List<List<ExecutiveStatus>> groupedClientStatusRecords = allRecords
-                .GroupBy(c => c.CLIENT_NAME)
-                .Select(grp => grp.ToList())
-                .ToList();
-
-            //declare pageSize and default number
-            int pageSize = 6;
-
-            //if page is null, make it 1
-            int pageNumber = (page ?? 1);
-
-            //create the model which is a list of Paged Executive Status Lists            
-            List<IPagedList<ExecutiveStatus>> model = new List<IPagedList<ExecutiveStatus>>();
-
-            //Add each pagedList to the model
-            foreach (List<ExecutiveStatus> esList in groupedClientStatusRecords)
-            {
-                model.Add(esList.ToPagedList(pageNumber, pageSize));
-            }
-
+            List<ExecutiveStatus> model = db.ExecutiveStatus.Where(x => x.CLIENT_NAME != "").ToList();
             
 
             return View(model);
 
         }
 
-        public ActionResult PagedStatusList()
+        public ActionResult PagedStatusList(string clientName, int? page)
         {
-            return PartialView();
+            //Default Autonation as client Name
+            clientName = clientName ?? "Autonation";
+            //declare pageSize and default number
+            int pageSize = 6;
+
+            //if page is null, make it 1
+            int pageNumber = page ?? 1;
+
+            //Create list of records for requested clientName
+            List<ExecutiveStatus> allRecords = db.ExecutiveStatus.Where(c => c.CLIENT_NAME == clientName).ToList();
+
+            //create the model which is a list of Paged Executive Status Lists            
+            PagedList<ExecutiveStatus> model = new PagedList<ExecutiveStatus>(allRecords, pageNumber, pageSize);
+
+            return PartialView(model);
         }
 
         [HttpPost]
@@ -90,15 +81,20 @@ namespace AutoProjectStatus.Controllers
             return RedirectToAction("Index");
         }
 
-        public JsonResult GetExecutiveStatus(int? id)
+        public JsonResult GetExecutiveStatus(string clientName)
         {
-            ExecutiveStatus model = db.ExecutiveStatus.Find(id);            
+            //Default Autonation as client Name if null
+            clientName = clientName ?? "Autonation";
+            
+            //string manipulation for ampersand
+            clientName = clientName.Replace("and", "&");
+
+            //Get model
+            List<ExecutiveStatus> model = db.ExecutiveStatus.Where(x => x.CLIENT_NAME == clientName).ToList();
+            
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
 
-        
-
-        
     }
 }
