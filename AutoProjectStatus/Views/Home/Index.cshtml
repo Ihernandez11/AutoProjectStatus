@@ -63,119 +63,52 @@
                                             Project Priority
                                         </th>
                                         <th scope="col">
-                                            Open Status
-                                        </th>
-                                        <th scope="col">
-                                            Retail Aftersales
-                                        </th>
-                                        <th scope="col">
                                             Project Name
                                         </th>
                                         <th scope="col">
-                                            Project Comments
+                                            Project Description
                                         </th>
                                         <th scope="col">
-                                            Project Type
+                                            Open Status
                                         </th>
+
                                         <th scope="col">
                                             Start Date
                                         </th>
                                         <th scope="col">
                                             Planned End Date
                                         </th>
-                                        <th scope="col">
-                                            Actual End Date
-                                        </th>
-                                        <th scope="col">
-                                            Project Description
-                                        </th>
-                                        <th scope="col">
-                                            Project Status
-                                        </th>
-                                        <th scope="col">
-                                            Project Constraints
-                                        </th>
-                                        <th scope="col">
-                                            Schedule
-                                        </th>
-                                        <th scope="col">
-                                            Budget
-                                        </th>
-                                        <th scope="col">
-                                            Client Satisfaction
-                                        </th>
-                                        <th scope="col">
-                                            Scope
-                                        </th>
-                                        <th scope="col">
-                                            Resources
-                                        </th>
-                                        <th scope="col">
-                                            Other Risk
-                                        </th>
+
+
                                     </tr>
                                 </thead>
 
                                 <tbody>
                                     <!--Add Edit Modal Data Toggle Attribute to tr so entire row is clickable-->
-                                    <tr style="font-size: .75rem;" data-toggle="modal" data-target="#editModal" ng-repeat="status in statusList.slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage))">
-                                        <td>
+                                    <tr style="font-size: .75rem;" data-toggle="modal" data-target="#editModal" ng-repeat="status in statusList.slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage))" ng-mouseover="showPopover()" ng-mouseleave="hidePopover()" ng-click="mapToEdit(status)" id="statusRow{{status.SEQ_NUM}}">
+                                        <td scope="col" class="has-popover align-bottom">
                                             {{status.CLIENT_NAME}}
                                         </td>
-                                        <td>
+                                        <td scope="col" class="has-popover align-bottom">
                                             {{status.PROJECT_PRIORITY}}
                                         </td>
-                                        <td>
-                                            {{status.OPEN_STATUS}}
-                                        </td>
-                                        <td>
-                                            {{status.RETAIL_AFTERSALES}}
-                                        </td>
-                                        <td>
+                                        <td scope="col" class="has-popover align-bottom">
                                             {{status.PROJECT_NAME}}
                                         </td>
-                                        <td>
-                                            {{status.PROJECT_COMMENTS}}
-                                        </td>
-                                        <td>
-                                            {{status.PROJECT_TYPE}}
-                                        </td>
-                                        <td>
-                                            {{status.START_DATE}}
-                                        </td>
-                                        <td>
-                                            {{status.PLANNED_END_DATE}}
-                                        </td>
-                                        <td>
-                                            {{status.ACTUAL_END_DATE}}
-                                        </td>
-                                        <td>
+                                        <td scope="col" class="align-bottom">
                                             {{status.PROJECT_DESCRIPTION}}
                                         </td>
-                                        <td>
-                                            {{status.PROJECT_STATUS}}
+                                        <td scope="col" class="align-bottom">
+                                            {{status.OPEN_STATUS}}
                                         </td>
-                                        <td>
-                                            {{status.PROJECT_CONSTRAINTS}}
+                                        <td scope="col" class="align-bottom">
+                                            {{status.START_DATE | date: 'MM/dd/yyyy'}}
                                         </td>
-                                        <td>
-                                            {{status.SCHEDULE}}
+                                        <td scope="col" class="align-bottom">
+                                            {{status.PLANNED_END_DATE | date: 'MM/dd/yyyy'}}
                                         </td>
-                                        <td>
-                                            {{status.BUDGET}}
-                                        </td>
-                                        <td>
-                                            {{status.CLIENT_SATISFACTION}}
-                                        </td>
-                                        <td>
-                                            {{status.SCOPE}}
-                                        </td>
-                                        <td>
-                                            {{status.RESOURCES}}
-                                        </td>
-                                        <td>
-                                            {{status.OTHER_RISK}}
-                                        </td>
+
+
                                     </tr>
                                 </tbody>
 
@@ -192,246 +125,267 @@
             </div>
 
         </div>
-    </div>
-</div>
 
 
-<!--Insert Data Modal-->
-<div class="modal fade" id="insertModal" tabindex="-1" role="dialog" aria-labelledby="insertModalTitle" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="insertModalLabel">Insert New Project</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
 
-            @using (Html.BeginForm("Insert", "Home", FormMethod.Post))
-            {
+        <!--Insert Data Modal-->
+        <div class="modal fade" id="insertModal" tabindex="-1" role="dialog" aria-labelledby="insertModalTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="insertModalLabel">Insert New Project</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
 
-                @Html.AntiForgeryToken()
+                    @using (Html.BeginForm("Insert", "Home", FormMethod.Post))
+                    {
 
-                <div class="modal-body">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <!--Left Side of Modal-->
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().CLIENT_NAME, "Client Name", new { @class = "col-form-label" })
-                                    @Html.DropDownList("CLIENT_NAME", Model.FirstOrDefault().ClientNameValues, new { @class = "form-control" })
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().PROJECT_PRIORITY, "Project Priority", new { @class = "col-form-label" })
-                                    @Html.TextBox("PROJECT_PRIORITY", null, new { @class = "form-control" })
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().OPEN_STATUS, "Open Status", new { @class = "col-form-label" })
-                                    @Html.DropDownList("OPEN_STATUS", Model.FirstOrDefault().OpenStatusValues, new { @class = "form-control" })
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().RETAIL_AFTERSALES, "Retail AfterSales", new { @class = "col-form-label" })
-                                    @Html.DropDownList("RETAIL_AFTERSALES", Model.FirstOrDefault().RetailAfterSalesValues, new { @class = "form-control" })
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().PROJECT_NAME, "Project Name", new { @class = "col-form-label" })
-                                    @Html.TextBox("PROJECT_NAME", null, new { @class = "form-control" })
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().PROJECT_TYPE, "Project Type", new { @class = "col-form-label" })
-                                    @foreach (var item in Model.FirstOrDefault().GetAllProjectTypes())
-                                    {
-                                        <div class="checkbox">
-                                            <label><input name="ProjectTypeList" type="checkbox" value=@item>@item</label>
+                        @Html.AntiForgeryToken()
+
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <!--Left Side of Modal-->
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().CLIENT_NAME, "Client Name", new { @class = "col-form-label" })
+                                            @Html.DropDownList("CLIENT_NAME", Model.FirstOrDefault().ClientNameValues, new { @class = "form-control" })
                                         </div>
-                                    }
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().PROJECT_DESCRIPTION, "Project Description", new { @class = "col-form-label" })
-                                    @Html.TextArea("PROJECT_DESCRIPTION", new { @class = "form-control" })
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().PROJECT_COMMENTS, "Project Comments", new { @class = "col-form-label" })
-                                    @Html.TextArea("PROJECT_COMMENTS", new { @class = "form-control" })
-                                </div>
-                            </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().PROJECT_PRIORITY, "Project Priority", new { @class = "col-form-label" })
+                                            @Html.TextBox("PROJECT_PRIORITY", null, new { @class = "form-control" })
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().OPEN_STATUS, "Open Status", new { @class = "col-form-label" })
+                                            @Html.DropDownList("OPEN_STATUS", Model.FirstOrDefault().OpenStatusValues, new { @class = "form-control" })
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().RETAIL_AFTERSALES, "Retail AfterSales", new { @class = "col-form-label" })
+                                            @Html.DropDownList("RETAIL_AFTERSALES", Model.FirstOrDefault().RetailAfterSalesValues, new { @class = "form-control" })
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().PROJECT_NAME, "Project Name", new { @class = "col-form-label" })
+                                            @Html.TextBox("PROJECT_NAME", null, new { @class = "form-control" })
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().PROJECT_TYPE, "Project Type", new { @class = "col-form-label" })
+                                            @foreach (var item in Model.FirstOrDefault().GetAllProjectTypes())
+                                            {
+                                                <div class="checkbox">
+                                                    <label><input name="ProjectTypeList" type="checkbox" value=@item>@item</label>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().PROJECT_DESCRIPTION, "Project Description", new { @class = "col-form-label" })
+                                            @Html.TextArea("PROJECT_DESCRIPTION", new { @class = "form-control" })
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().PROJECT_COMMENTS, "Project Comments", new { @class = "col-form-label" })
+                                            @Html.TextArea("PROJECT_COMMENTS", new { @class = "form-control" })
+                                        </div>
+                                    </div>
 
-                            <!--Right Side of Modal-->
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().START_DATE, "Start Date", new { @class = "col-form-label" })
-                                    <input type="date" class="form-control" id="start_date" name="START_DATE">
+                                    <!--Right Side of Modal-->
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().START_DATE, "Start Date", new { @class = "col-form-label" })
+                                            <input type="date" class="form-control" id="start_date" name="START_DATE">
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().PLANNED_END_DATE, "Planned End Date", new { @class = "col-form-label" })
+                                            <input type="date" class="form-control" id="planned_end_date" name="PLANNED_END_DATE">
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().ACTUAL_END_DATE, "Actual End Date", new { @class = "col-form-label" })
+                                            <input type="date" class="form-control" id="actual_end_date" name="ACTUAL_END_DATE">
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().PROJECT_CONSTRAINTS, "Project Constraints", new { @class = "col-form-label" })
+                                            @Html.DropDownList("PROJECT_CONSTRAINTS", Model.FirstOrDefault().ProjectContstraintValues, new { @class = "form-control" })
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().SCHEDULE, "Schedule", new { @class = "col-form-label" })
+                                            @Html.DropDownList("SCHEDULE", Model.FirstOrDefault().ScheduleValues, new { @class = "form-control" })
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().BUDGET, "Budget", new { @class = "col-form-label" })
+                                            @Html.DropDownList("BUDGET", Model.FirstOrDefault().BudgetValues, new { @class = "form-control" })
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().CLIENT_SATISFACTION, "Client Satisfaction", new { @class = "col-form-label" })
+                                            @Html.DropDownList("CLIENT_SATISFACTION", Model.FirstOrDefault().ClientSatisfactionValues, new { @class = "form-control" })
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().SCOPE, "Scope", new { @class = "col-form-label" })
+                                            @Html.DropDownList("SCOPE", Model.FirstOrDefault().ScopeValues, new { @class = "form-control" })
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().RESOURCES, "Resources", new { @class = "col-form-label" })
+                                            @Html.DropDownList("RESOURCES", Model.FirstOrDefault().ResourceValues, new { @class = "form-control" })
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().OTHER_RISK, "Other Risk", new { @class = "col-form-label" })
+                                            @Html.DropDownList("OTHER_RISK", Model.FirstOrDefault().OtherRiskValues, new { @class = "form-control" })
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().PLANNED_END_DATE, "Planned End Date", new { @class = "col-form-label" })
-                                    <input type="date" class="form-control" id="planned_end_date" name="PLANNED_END_DATE">
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().ACTUAL_END_DATE, "Actual End Date", new { @class = "col-form-label" })
-                                    <input type="date" class="form-control" id="actual_end_date" name="ACTUAL_END_DATE">
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().PROJECT_CONSTRAINTS, "Project Constraints", new { @class = "col-form-label" })
-                                    @Html.DropDownList("PROJECT_CONSTRAINTS", Model.FirstOrDefault().ProjectContstraintValues, new { @class = "form-control" })
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().SCHEDULE, "Schedule", new { @class = "col-form-label" })
-                                    @Html.DropDownList("SCHEDULE", Model.FirstOrDefault().ScheduleValues, new { @class = "form-control" })
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().BUDGET, "Budget", new { @class = "col-form-label" })
-                                    @Html.DropDownList("BUDGET", Model.FirstOrDefault().BudgetValues, new { @class = "form-control" })
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().CLIENT_SATISFACTION, "Client Satisfaction", new { @class = "col-form-label" })
-                                    @Html.DropDownList("CLIENT_SATISFACTION", Model.FirstOrDefault().ClientSatisfactionValues, new { @class = "form-control" })
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().SCOPE, "Scope", new { @class = "col-form-label" })
-                                    @Html.DropDownList("SCOPE", Model.FirstOrDefault().ScopeValues, new { @class = "form-control" })
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().RESOURCES, "Resources", new { @class = "col-form-label" })
-                                    @Html.DropDownList("RESOURCES", Model.FirstOrDefault().ResourceValues, new { @class = "form-control" })
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().OTHER_RISK, "Other Risk", new { @class = "col-form-label" })
-                                    @Html.DropDownList("OTHER_RISK", Model.FirstOrDefault().OtherRiskValues, new { @class = "form-control" })
-                                </div>
+
                             </div>
                         </div>
-
-                    </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <input type="submit" value="Save" class="btn btn-primary" />
+                        </div>
+                    }
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <input type="submit" value="Save" class="btn btn-primary" />
-                </div>
-            }
-        </div>
-    </div>
-</div>
-
-<!--Edit Data Modal-->
-<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalTitle" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="insertModalLabel">Insert New Project</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
             </div>
+        </div>
 
-            @using (Html.BeginForm("Edit", "Home", FormMethod.Post))
-            {
+        <!--Edit Data Modal-->
+        <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="Edit Status" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="insertModalLabel">Insert New Project</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
 
-                @Html.AntiForgeryToken()
+                    @using (Html.BeginForm("Edit", "Home", FormMethod.Post))
+                    {
 
-                <input data-val="true" data-val-number="The field SEQ_NUM must be a number." data-val-required="The SEQ_NUM field is required." id="SEQ_NUM" name="SEQ_NUM" type="hidden" value="">
+                        @Html.AntiForgeryToken()
+
+                        <input data-val="true" data-val-number="The field SEQ_NUM must be a number." data-val-required="The SEQ_NUM field is required." id="SEQ_NUM" name="SEQ_NUM" type="hidden" value="{{editInputValues.SEQ_NUM}}">
 
 
 
-                <div class="modal-body">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <!--Left Side of Modal-->
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().CLIENT_NAME, "Client Name", new { @class = "col-form-label" })
-                                    @Html.DropDownList("CLIENT_NAME", Model.FirstOrDefault().ClientNameValues, new { @class = "form-control", @id = "CLIENT_NAME" })
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().PROJECT_PRIORITY, "Project Priority", new { @class = "col-form-label" })
-                                    @Html.TextBox("PROJECT_PRIORITY", null, new { @class = "form-control", @id = "PROJECT_PRIORITY" })
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().OPEN_STATUS, "Open Status", new { @class = "col-form-label" })
-                                    @Html.DropDownList("OPEN_STATUS", Model.FirstOrDefault().OpenStatusValues, new { @class = "form-control", @id = "OPEN_STATUS" })
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().RETAIL_AFTERSALES, "Retail AfterSales", new { @class = "col-form-label" })
-                                    @Html.DropDownList("RETAIL_AFTERSALES", Model.FirstOrDefault().RetailAfterSalesValues, new { @class = "form-control", @id = "RETAIL_AFTERSALES" })
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().PROJECT_NAME, "Project Name", new { @class = "col-form-label" })
-                                    @Html.TextBox("PROJECT_NAME", null, new { @class = "form-control", @id = "PROJECT_NAME" })
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().PROJECT_TYPE, "Project Type", new { @class = "col-form-label" })
-                                    @foreach (var item in Model.FirstOrDefault().GetAllProjectTypes())
-                                    {
-                                        <div class="checkbox">
-                                            <label><input name="ProjectTypeList" type="checkbox" id="PROJECT_TYPE" value=@item>@item</label>
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <!--Left Side of Modal-->
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="col-form-label" for="CLIENT_NAME">Client Name</label>
+                                            <select class="form-control" id="CLIENT_NAME" name="CLIENT_NAME" ng-model="editInputValues.CLIENT_NAME" >
+                                                <option ng-repeat="clientName in editInputValues.ClientNameValues" value="{{clientName.Value}}">{{clientName.Value}}</option>
+                                            </select>
                                         </div>
-                                    }
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().PROJECT_DESCRIPTION, "Project Description", new { @class = "col-form-label" })
-                                    @Html.TextArea("PROJECT_DESCRIPTION", new { @class = "form-control", @id = "PROJECT_DESCRIPTION" })
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().PROJECT_COMMENTS, "Project Comments", new { @class = "col-form-label" })
-                                    @Html.TextArea("PROJECT_COMMENTS", new { @class = "form-control", @id = "PROJECT_COMMENTS" })
-                                </div>
-                            </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().PROJECT_PRIORITY, "Project Priority", new { @class = "col-form-label" })
+                                            @Html.TextBox("PROJECT_PRIORITY", null, new { @class = "form-control", @id = "PROJECT_PRIORITY", ng_Model= "editInputValues.PROJECT_PRIORITY" })
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label" for="OPEN_STATUS">Open Status</label>
+                                            <select class="form-control" id="OPEN_STATUS" name="OPEN_STATUS" ng-model="editInputValues.OPEN_STATUS">
+                                                <option ng-repeat="openStatus in editInputValues.OpenStatusValues" value="{{openStatus.Value}}">{{openStatus.Value}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label" for="RETAIL_AFTERSALES">Retail Aftersales</label>
+                                            <select class="form-control" id="RETAIL_AFTERSALES" name="RETAIL_AFTERSALES" ng-model="editInputValues.RETAIL_AFTERSALES">
+                                                <option ng-repeat="retail in editInputValues.RetailAfterSalesValues" value="{{retail.Value}}">{{retail.Value}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().PROJECT_NAME, "Project Name", new { @class = "col-form-label" })
+                                            @Html.TextBox("PROJECT_NAME", null, new { @class = "form-control", @id = "PROJECT_NAME", ng_Model = "editInputValues.PROJECT_NAME" })
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().PROJECT_TYPE, "Project Type", new { @class = "col-form-label" })
+                                            @foreach (var item in Model.FirstOrDefault().GetAllProjectTypes())
+                                            {
+                                                <div class="checkbox">
+                                                    <label><input name="ProjectTypeList" type="checkbox" id="PROJECT_TYPE" value="@item" ng-model="editInputValues.PROJECT_TYPE"  ng-checked="editInputValues.PROJECT_TYPE.includes('@item')">@item</label>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().PROJECT_DESCRIPTION, "Project Description", new { @class = "col-form-label" })
+                                            @Html.TextArea("PROJECT_DESCRIPTION", new { @class = "form-control", @id = "PROJECT_DESCRIPTION", ng_Model = "editInputValues.PROJECT_DESCRIPTION" })
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().PROJECT_COMMENTS, "Project Comments", new { @class = "col-form-label" })
+                                            @Html.TextArea("PROJECT_COMMENTS", new { @class = "form-control", @id = "PROJECT_COMMENTS", ng_Model = "editInputValues.PROJECT_COMMENTS" })
+                                        </div>
+                                    </div>
 
-                            <!--Right Side of Modal-->
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().START_DATE, "Start Date", new { @class = "col-form-label" })
-                                    <input type="date" class="form-control" id="START_DATE" name="START_DATE">
+                                    <!--Right Side of Modal-->
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().START_DATE, "Start Date", new { @class = "col-form-label" })
+                                            <input type="date" class="form-control" id="START_DATE" name="START_DATE"  ng-model="editInputValues.START_DATE">
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().PLANNED_END_DATE, "Planned End Date", new { @class = "col-form-label" })
+                                            <input type="date" class="form-control" id="PLANNED_END_DATE"  name="PLANNED_END_DATE" ng-model="editInputValues.PLANNED_END_DATE">
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().ACTUAL_END_DATE, "Actual End Date", new { @class = "col-form-label" })
+                                            <input type="date" class="form-control" id="ACTUAL_END_DATE"  name="ACTUAL_END_DATE" ng-model="editInputValues.ACTUAL_END_DATE">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label" for="PROJECT_CONSTRAINTS">Project Constraints</label>
+                                            <select class="form-control" id="PROJECT_CONSTRAINTS" name="PROJECT_CONSTRAINTS" ng-model="editInputValues.PROJECT_CONSTRAINTS">
+                                                <option ng-repeat="pc in editInputValues.ProjectContstraintValues" value="{{pc.Value}}">{{pc.Value}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label" for="SCHEDULE">Schedule</label>
+                                            <select class="form-control" id="SCHEDULE" name="SCHEDULE" ng-model="editInputValues.SCHEDULE">
+                                                <option ng-repeat="sch in editInputValues.ScheduleValues" value="{{sch.Value}}">{{sch.Value}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label" for="BUDGET">Budget</label>
+                                            <select class="form-control" id="BUDGET" name="BUDGET" ng-model="editInputValues.BUDGET">
+                                                <option ng-repeat="bgt in editInputValues.BudgetValues" value="{{bgt.Value}}">{{bgt.Value}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label" for="CLIENT_SATISFACTION">Client Satisfaction</label>
+                                            <select class="form-control" id="CLIENT_SATISFACTION" name="CLIENT_SATISFACTION" ng-model="editInputValues.CLIENT_SATISFACTION">
+                                                <option ng-repeat="csf in editInputValues.ClientSatisfactionValues" value="{{csf.Value}}">{{csf.Value}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label" for="SCOPE">Scope</label>
+                                            <select class="form-control" id="SCOPE" name="SCOPE" ng-model="editInputValues.SCOPE">
+                                                <option ng-repeat="scope in editInputValues.ScopeValues" value="{{scope.Value}}">{{scope.Value}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label" for="RESOURCES">Resources</label>
+                                            <select class="form-control" id="RESOURCES" name="RESOURCES" ng-model="editInputValues.RESOURCES">
+                                                <option ng-repeat="rsc in editInputValues.ResourceValues" value="{{rsc.Value}}">{{rsc.Value}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label" for="OTHER_RISK">Other Risk</label>
+                                            <select class="form-control" id="OTHER_RISK" name="OTHER_RISK" ng-model="editInputValues.OTHER_RISK">
+                                                <option ng-repeat="risk in editInputValues.OtherRiskValues" value="{{risk.Value}}">{{risk.Value}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().PLANNED_END_DATE, "Planned End Date", new { @class = "col-form-label" })
-                                    <input type="date" class="form-control" id="PLANNED_END_DATE" name="PLANNED_END_DATE">
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().ACTUAL_END_DATE, "Actual End Date", new { @class = "col-form-label" })
-                                    <input type="date" class="form-control" id="ACTUAL_END_DATE" name="ACTUAL_END_DATE">
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().PROJECT_CONSTRAINTS, "Project Constraints", new { @class = "col-form-label" })
-                                    @Html.DropDownList("PROJECT_CONSTRAINTS", Model.FirstOrDefault().ProjectContstraintValues, new { @class = "form-control", @id = "PROJECT_CONSTRAINTS" })
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().SCHEDULE, "Schedule", new { @class = "col-form-label" })
-                                    @Html.DropDownList("SCHEDULE", Model.FirstOrDefault().ScheduleValues, new { @class = "form-control", @id = "SCHEDULE" })
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().BUDGET, "Budget", new { @class = "col-form-label" })
-                                    @Html.DropDownList("BUDGET", Model.FirstOrDefault().BudgetValues, new { @class = "form-control", @id = "BUDGET" })
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().CLIENT_SATISFACTION, "Client Satisfaction", new { @class = "col-form-label" })
-                                    @Html.DropDownList("CLIENT_SATISFACTION", Model.FirstOrDefault().ClientSatisfactionValues, new { @class = "form-control", @id = "CLIENT_SATISFACTION" })
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().SCOPE, "Scope", new { @class = "col-form-label" })
-                                    @Html.DropDownList("SCOPE", Model.FirstOrDefault().ScopeValues, new { @class = "form-control", @id = "SCOPE" })
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().RESOURCES, "Resources", new { @class = "col-form-label" })
-                                    @Html.DropDownList("RESOURCES", Model.FirstOrDefault().ResourceValues, new { @class = "form-control", @id = "RESOURCES" })
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.FirstOrDefault().OTHER_RISK, "Other Risk", new { @class = "col-form-label" })
-                                    @Html.DropDownList("OTHER_RISK", Model.FirstOrDefault().OtherRiskValues, new { @class = "form-control", @id = "OTHER_RISK" })
-                                </div>
+
                             </div>
                         </div>
-
-                    </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <input type="submit" value="Save" class="btn btn-primary" />
+                        </div>
+                    }
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <input type="submit" value="Save" class="btn btn-primary" />
-                </div>
-            }
+            </div>
         </div>
+
+
+
+        <!--cntrlr closing div-->
     </div>
 </div>
-
-
-
-

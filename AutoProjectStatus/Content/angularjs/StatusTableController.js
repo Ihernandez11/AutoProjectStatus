@@ -5,7 +5,7 @@
     
 
     //LoginController
-    var StatusTableController = function ($scope, $http, $window, $filter) {
+    var StatusTableController = function ($scope, $http, $window) {
 
         function ToJavaScriptDate(value) {
             var pattern = /Date\(([^)]+)\)/;
@@ -15,7 +15,6 @@
                 return (dt.getMonth() + 1) + "/" + dt.getDate() + "/" + dt.getFullYear();
             }
         }
-
         
 
         //Set the data returned to a scope variable
@@ -42,8 +41,6 @@
             $scope.setPage = function (pageNo) {
                 $scope.currentPage = pageNo;
             };
-
-
 
 
         };
@@ -97,32 +94,83 @@
 
             //get table data
             assignClientNameAndGetData();
-
-            
             
         };
         
-        
-    };
 
-    app.filter('startFrom', function () {
-        return function (input, start) {
-            if (input !== undefined) {
-                start = +start; //parse to int
-                return input.slice(start);
+        //functions for show and hide popover on mouseover
+        $scope.showPopover = function () {
+            
+            $('table tbody tr#statusRow' + this.status.SEQ_NUM).popover({
+                container: 'body',
+                html: true,
+                placement: 'top',
+                selector: 'table tbody tr td.has-popover',
+                template: '<div class="popover status-popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>',
+                title: this.status.PROJECT_NAME,
+                content: '<div class="container-fluid-popover">' +
+                            '<div class= "row">' +
+                                '<div class="col-sm-6">' +
+                                    '<ul class="list-inline">' +
+                                        '<li class="text-nowrap text-left">' + '<b>Project Type: </b>' + this.status.PROJECT_TYPE + '</li>' +
+                                        '<li class="text-nowrap text-left">' + '<b>Project Status: </b>' + this.status.PROJECT_STATUS + '</li>' +
+                                        '<li class="text-nowrap text-left">' + '<b>Project Constraints: </b>' + this.status.PROJECT_CONSTRAINTS + '</li>' +
+                                        '<li class="text-left">' + '<b>Project Comments: </b>' + this.status.PROJECT_COMMENTS + '</li>' +
+                                        '<li class="text-nowrap text-left">' + '<b>Actual End Date: </b>' + this.status.ACTUAL_END_DATE + '</li>' +
+                                        '<li class="text-nowrap text-left">' + '<b>Retail Aftersales: </b>' + this.status.RETAIL_AFTERSALES + '</li>' +
+                                        
+                                    '</ul>' +
+                                '</div>' +
+                                '<div class="col-sm-6">' +
+                                    '<ul class="list-inline">' +
+                                        '<li class="text-nowrap text-left">' + '<b>Schedule: </b>' + this.status.SCHEDULE + '</li>' +
+                                        '<li class="text-nowrap text-left">' + '<b>Budget: </b>' + this.status.BUDGET + '</li>' +
+                                        '<li class="text-nowrap text-left">' + '<b>Client Satisfaction: </b>' + this.status.CLIENT_SATISFACTION + '</li>' +
+                                        '<li class="text-nowrap text-left">' + '<b>Scope: </b>' + this.status.SCOPE + '</li>' +
+                                        '<li class="text-nowrap text-left">' + '<b>Resources: </b>' + this.status.RESOURCES + '</li>' +
+                                        '<li class="text-nowrap text-left">' + '<b>Other Risk: </b>' + this.status.OTHER_RISK + '</li>' +
+                                    '</ul>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>'
+            });
+            $('table tbody tr#statusRow' + this.status.SEQ_NUM).popover('show');
+        };
+
+        $scope.hidePopover = function () {
+            $('table tbody tr#statusRow' + this.status.SEQ_NUM).popover('hide');
+        };
+
+        //update editModal with clicked status row values
+        $scope.mapToEdit = function (statusList) {
+            
+            //Put the statusList in a scope variable and then put the scope {{variable}} in the edit modal 
+            $scope.editInputValues = statusList;
+
+            //Convert the Project Types to an array to map each value to the corresponding checkbox
+            if ($scope.editInputValues.PROJECT_TYPE.includes(',')) {
+                $scope.editInputValues.PROJECT_TYPE = $scope.editInputValues.PROJECT_TYPE.split(','); 
+
+                for (var i = 0; i <= $scope.editInputValues.PROJECT_TYPE.length; i++) {
+                    if ($scope.editInputValues.PROJECT_TYPE[i]) {
+                        $scope.editInputValues.PROJECT_TYPE[i] = $scope.editInputValues.PROJECT_TYPE[i].trim();
+                    }
+                }
             }
             
+            
+            //Convert the Date fields to map to the date type input value
+            $scope.editInputValues.START_DATE = new Date($scope.editInputValues.START_DATE);
+            $scope.editInputValues.PLANNED_END_DATE = new Date($scope.editInputValues.PLANNED_END_DATE);
+            $scope.editInputValues.ACTUAL_END_DATE = new Date($scope.editInputValues.ACTUAL_END_DATE);
+            
         };
-    });
+
+    };
 
     
-        
-        
 
     app.controller("StatusTableController", ["$scope", "$http", "$window", "$filter", StatusTableController]);
-
-
-   
     
 
     //closing app function bracket
