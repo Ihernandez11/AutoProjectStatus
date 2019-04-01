@@ -300,7 +300,7 @@
                                             @foreach (var item in Model.FirstOrDefault().GetAllProjectTypes())
                                             {
                                                 <div class="checkbox">
-                                                    <label><input name="ProjectTypeList" type="checkbox" id="PROJECT_TYPE" value="@item" ng-model="editInputValues.PROJECT_TYPE"  ng-checked="editInputValues.PROJECT_TYPE.includes('@item')">@item</label>
+                                                    <label><input name="ProjectTypeList" type="checkbox" id="PROJECT_TYPE" value="@item" ng-checked="editInputValues.PROJECT_TYPE.includes('@item')">@item</label>
                                                 </div>
                                             }
                                         </div>
