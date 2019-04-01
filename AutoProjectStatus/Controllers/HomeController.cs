@@ -69,14 +69,13 @@ namespace AutoProjectStatus.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(ExecutiveStatus model)
         {
-            //create new seq_num
-            model.SEQ_NUM = db.ExecutiveStatus.OrderByDescending(m => m.SEQ_NUM).FirstOrDefault().SEQ_NUM + 1;
-
+            
             //Create Project Type from List
             model.PROJECT_TYPE = String.Join(",", model.ProjectTypeList);
 
 
             db.ExecutiveStatus.Add(model);
+            db.SaveChanges();
 
             return RedirectToAction("Index");
         }

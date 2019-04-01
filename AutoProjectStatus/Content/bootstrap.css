@@ -587,6 +587,14 @@ pre {
     margin-left: auto;
 }
 
+.container-fluid-popover {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 0px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
 .row {
     display: -ms-flexbox;
     display: flex;
@@ -6291,7 +6299,7 @@ a.close.disabled {
     left: 0;
     z-index: 1060;
     display: block;
-    max-width: 276px;
+    max-width: 600px;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     font-style: normal;
     font-weight: 400;
@@ -6306,7 +6314,7 @@ a.close.disabled {
     word-spacing: normal;
     white-space: normal;
     line-break: auto;
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     word-wrap: break-word;
     background-color: #fff;
     background-clip: padding-box;
@@ -6314,6 +6322,7 @@ a.close.disabled {
     border-radius: 0.3rem;
 }
 
+    
     .popover .arrow {
         position: absolute;
         display: block;
