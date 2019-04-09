@@ -17,13 +17,14 @@
     @Scripts.Render("~/bundles/modernizr")
     <link href="~/Content/bootstrap.css" rel="stylesheet" />
     <link href="~/Content/Site.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <title>@ViewBag.Title - Automotive Project Status</title>
 
 
 
 </head>
 <body>
-    <nav class="navbar fixed-top navbar-light bg-primary">
+    <nav class="navbar fixed-top navbar-light bg-dark">
         @Html.ActionLink("Automotive Project Status", "Index", "Home", new { area = "" }, new { @class = "navbar-brand text-white" })
     </nav>
     <div class="body-content">
@@ -35,7 +36,7 @@
     </div>
 
     <script src="~/Content/angularjs/StatusTableController.js"></script>
-    
+
 </body>
 
 </html>

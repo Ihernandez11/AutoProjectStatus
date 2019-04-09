@@ -6,29 +6,38 @@
 
 
 
-
-<div class="jumbotron">
-    <h1>Automotive Project Status</h1>
-    <p class="lead">This site will be utilized to insert new project line items and update the status of existing project line items.</p>
-
-    <div class="container-fluid">
-
-        <div class="row">
-            <div class="col-md-4">
-                <p><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#insertModal">Insert New Project</button></p>
-                <p>To edit a project record, click on the highlighted row.</p>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div ng-app="StatusTableModule">
     <div ng-controller="StatusTableController">
+
+        @*<div class="jumbotron">
+            <h1>Automotive Project Status</h1>
+            <p class="lead">This site will be utilized to insert new project line items and update the status of existing project line items.</p>
+
+
+        </div>*@
+
+        
+
         <div class="container-fluid">
             <div class="row">
+                
+                    
+                <div class="col-md-2">
+                    
+                    <hr class="hr-double" style="border-top: 3px double #8c8b8b;">
+                    
+                    <p><button type="button" class="btn btn-dark" data-toggle="modal" data-target="#insertModal">Insert New Project</button></p>
+                    <p>To edit a project record, click on the highlighted row.</p>
+                    <p class="form-inline">Search by Project Name:</p>
+                    <input type="text" class="form-control" placeholder="Project Name" ng-model="projectSearchVal">
+                    <br />
+                </div>
 
 
-                <div class="col-md-12">
+
+                <div class="col-md-10">
+                    <hr class="hr-double" style="border-top: 3px double #8c8b8b;">
+
                     <div id="tabs">
 
                         <ul class="nav nav-pills nav-justified">
@@ -39,7 +48,7 @@
                                 {
                                     string tabNum = "tab" + i;
                                     string hrefVal = "#" + clientName.Replace(" ", "-").ToString();
-                                    <li class="nav-item" id=@tabNum><a id=@tabNum class="nav-link @hrefVal" ng-click="updateActive(&quot;@tabNum&quot;)" href=@hrefVal>@clientName</a></li>
+                                    <li class="nav-item" id=@tabNum><a id=@tabNum class="nav-link  @hrefVal" ng-click="updateActive(&quot;@tabNum&quot;)" href=@hrefVal>@clientName</a></li>
                                     i++;
                                 }
                             }
@@ -50,81 +59,105 @@
                     <hr class="hr-double" style="border-top: 3px double #8c8b8b;">
                     <br>
 
-                    <div class="container-fluid">
+                    
 
-                        <div class="table-responsive">
-                            <table class="table-striped table-hover">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th scope="col">
-                                            Client Name
-                                        </th>
-                                        <th scope="col">
+
+
+                    <div class="table-responsive">
+                        <table class="table-striped table-hover">
+                            <thead class="thead thead-dark border-bottom">
+                                <tr>
+                                    <th scope="col" class="">
+                                        Client Name
+                                    </th>
+                                    <th scope="col">
+                                        <a href="#" class="text-dark" ng-click="sortType = 'PROJECT_PRIORITY'; sortReverse = !sortReverse">
                                             Project Priority
-                                        </th>
-                                        <th scope="col">
+                                            <span ng-show="sortType == 'PROJECT_PRIORITY' && !sortReverse" class="fa fa-caret-down"></span>
+                                            <span ng-show="sortType == 'PROJECT_PRIORITY' && sortReverse" class="fa fa-caret-up"></span>
+                                        </a>
+                                    </th>
+                                    <th scope="col" class="text-dark">
+                                        <a href="#" class="text-dark" ng-click="sortType = 'PROJECT_NAME'; sortReverse = !sortReverse">
                                             Project Name
-                                        </th>
-                                        <th scope="col">
+                                            <span ng-show="sortType == 'PROJECT_NAME' && !sortReverse" class="fa fa-caret-down"></span>
+                                            <span ng-show="sortType == 'PROJECT_NAME' && sortReverse" class="fa fa-caret-up"></span>
+                                        </a>
+                                    </th>
+                                    <th scope="col" >
+                                        <a href="#" class="text-dark" ng-click="sortType = 'PROJECT_DESCRIPTION'; sortReverse = !sortReverse">
                                             Project Description
-                                        </th>
-                                        <th scope="col">
+                                            <span ng-show="sortType == 'PROJECT_DESCRIPTION' && !sortReverse" class="fa fa-caret-down"></span>
+                                            <span ng-show="sortType == 'PROJECT_DESCRIPTION' && sortReverse" class="fa fa-caret-up"></span>
+                                        </a>
+                                    </th>
+                                    <th scope="col" >
+                                        <a href="#" class="text-dark" ng-click="sortType = 'OPEN_STATUS'; sortReverse = !sortReverse">
                                             Open Status
-                                        </th>
-
-                                        <th scope="col">
+                                            <span ng-show="sortType == 'OPEN_STATUS' && !sortReverse" class="fa fa-caret-down"></span>
+                                            <span ng-show="sortType == 'OPEN_STATUS' && sortReverse" class="fa fa-caret-up"></span>
+                                        </a>
+                                    </th>
+                                    <th scope="col" >
+                                        <a href="#" class="text-dark" ng-click="sortType = 'START_DATE'; sortReverse = !sortReverse">
                                             Start Date
-                                        </th>
-                                        <th scope="col">
+                                            <span ng-show="sortType == 'START_DATE' && !sortReverse" class="fa fa-caret-down"></span>
+                                            <span ng-show="sortType == 'START_DATE' && sortReverse" class="fa fa-caret-up"></span>
+                                        </a>
+                                    </th>
+                                    <th scope="col" >
+                                        <a href="#" class="text-dark" ng-click="sortType = 'PLANNED_END_DATE'; sortReverse = !sortReverse">
                                             Planned End Date
-                                        </th>
+                                            <span ng-show="sortType == 'PLANNED_END_DATE' && !sortReverse" class="fa fa-caret-down"></span>
+                                            <span ng-show="sortType == 'PLANNED_END_DATE' && sortReverse" class="fa fa-caret-up"></span>
+                                        </a>
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <!--Add Edit Modal Data Toggle Attribute to tr so entire row is clickable-->
+                                <tr style="font-size: .75rem;" data-toggle="modal" data-target="#editModal" ng-repeat="status in statusList.slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage)) | orderBy:sortType:sortReverse | filter:projectSearchVal" ng-mouseover="showPopover()" ng-mouseleave="hidePopover()" ng-click="mapToEdit(status)" id="statusRow{{status.SEQ_NUM}}">
+                                    <td scope="col" class="has-popover align-bottom">
+                                        {{status.CLIENT_NAME}}
+                                    </td>
+                                    <td scope="col" class="has-popover align-bottom">
+                                        {{status.PROJECT_PRIORITY}}
+                                    </td>
+                                    <td scope="col" class="has-popover align-bottom">
+                                        {{status.PROJECT_NAME}}
+                                    </td>
+                                    <td scope="col" class="align-bottom">
+                                        {{status.PROJECT_DESCRIPTION}}
+                                    </td>
+                                    <td scope="col" class="align-bottom">
+                                        {{status.OPEN_STATUS}}
+                                    </td>
+                                    <td scope="col" class="align-bottom">
+                                        {{status.START_DATE | date: 'MM/dd/yyyy'}}
+                                    </td>
+                                    <td scope="col" class="align-bottom">
+                                        {{status.PLANNED_END_DATE | date: 'MM/dd/yyyy'}}
+                                    </td>
 
 
-                                    </tr>
-                                </thead>
+                                </tr>
+                            </tbody>
 
-                                <tbody>
-                                    <!--Add Edit Modal Data Toggle Attribute to tr so entire row is clickable-->
-                                    <tr style="font-size: .75rem;" data-toggle="modal" data-target="#editModal" ng-repeat="status in statusList.slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage))" ng-mouseover="showPopover()" ng-mouseleave="hidePopover()" ng-click="mapToEdit(status)" id="statusRow{{status.SEQ_NUM}}">
-                                        <td scope="col" class="has-popover align-bottom">
-                                            {{status.CLIENT_NAME}}
-                                        </td>
-                                        <td scope="col" class="has-popover align-bottom">
-                                            {{status.PROJECT_PRIORITY}}
-                                        </td>
-                                        <td scope="col" class="has-popover align-bottom">
-                                            {{status.PROJECT_NAME}}
-                                        </td>
-                                        <td scope="col" class="align-bottom">
-                                            {{status.PROJECT_DESCRIPTION}}
-                                        </td>
-                                        <td scope="col" class="align-bottom">
-                                            {{status.OPEN_STATUS}}
-                                        </td>
-                                        <td scope="col" class="align-bottom">
-                                            {{status.START_DATE | date: 'MM/dd/yyyy'}}
-                                        </td>
-                                        <td scope="col" class="align-bottom">
-                                            {{status.PLANNED_END_DATE | date: 'MM/dd/yyyy'}}
-                                        </td>
+                        </table>
+                        <!--pagination-->
 
+                        <pagination total-items="totalItems" ng-model="currentPage" max-size="maxSize" class="pagination-sm " boundary-links="true" rotate="false" num-pages="numPages" items-per-page="itemsPerPage"></pagination>
+                        <h6><span class="badge badge-dark">Page: {{currentPage}} / {{numPages}}</span></h6>
 
-                                    </tr>
-                                </tbody>
-
-                            </table>
-                            <!--pagination-->
-
-                            <pagination total-items="totalItems" ng-model="currentPage" max-size="maxSize" class="pagination-sm " boundary-links="true" rotate="false" num-pages="numPages" items-per-page="itemsPerPage"></pagination>
-                            <h6><span class="badge badge-primary">Page: {{currentPage}} / {{numPages}}</span></h6>
-
-                        </div>
-                        <!--Container Div End-->
                     </div>
+                    <!--Container Div End-->
                 </div>
+                
             </div>
-
         </div>
+
+
 
 
 
@@ -271,13 +304,13 @@
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label class="col-form-label" for="CLIENT_NAME">Client Name</label>
-                                            <select class="form-control" id="CLIENT_NAME" name="CLIENT_NAME" ng-model="editInputValues.CLIENT_NAME" >
+                                            <select class="form-control" id="CLIENT_NAME" name="CLIENT_NAME" ng-model="editInputValues.CLIENT_NAME">
                                                 <option ng-repeat="clientName in editInputValues.ClientNameValues" value="{{clientName.Value}}">{{clientName.Value}}</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
                                             @Html.LabelFor(m => m.FirstOrDefault().PROJECT_PRIORITY, "Project Priority", new { @class = "col-form-label" })
-                                            @Html.TextBox("PROJECT_PRIORITY", null, new { @class = "form-control", @id = "PROJECT_PRIORITY", ng_Model= "editInputValues.PROJECT_PRIORITY" })
+                                            @Html.TextBox("PROJECT_PRIORITY", null, new { @class = "form-control", @id = "PROJECT_PRIORITY", ng_Model = "editInputValues.PROJECT_PRIORITY" })
                                         </div>
                                         <div class="form-group">
                                             <label class="col-form-label" for="OPEN_STATUS">Open Status</label>
@@ -318,15 +351,15 @@
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             @Html.LabelFor(m => m.FirstOrDefault().START_DATE, "Start Date", new { @class = "col-form-label" })
-                                            <input type="date" class="form-control" id="START_DATE" name="START_DATE"  ng-model="editInputValues.START_DATE">
+                                            <input type="date" class="form-control" id="START_DATE" name="START_DATE" ng-model="editInputValues.START_DATE">
                                         </div>
                                         <div class="form-group">
                                             @Html.LabelFor(m => m.FirstOrDefault().PLANNED_END_DATE, "Planned End Date", new { @class = "col-form-label" })
-                                            <input type="date" class="form-control" id="PLANNED_END_DATE"  name="PLANNED_END_DATE" ng-model="editInputValues.PLANNED_END_DATE">
+                                            <input type="date" class="form-control" id="PLANNED_END_DATE" name="PLANNED_END_DATE" ng-model="editInputValues.PLANNED_END_DATE">
                                         </div>
                                         <div class="form-group">
                                             @Html.LabelFor(m => m.FirstOrDefault().ACTUAL_END_DATE, "Actual End Date", new { @class = "col-form-label" })
-                                            <input type="date" class="form-control" id="ACTUAL_END_DATE"  name="ACTUAL_END_DATE" ng-model="editInputValues.ACTUAL_END_DATE">
+                                            <input type="date" class="form-control" id="ACTUAL_END_DATE" name="ACTUAL_END_DATE" ng-model="editInputValues.ACTUAL_END_DATE">
                                         </div>
                                         <div class="form-group">
                                             <label class="col-form-label" for="PROJECT_CONSTRAINTS">Project Constraints</label>
@@ -384,8 +417,7 @@
             </div>
         </div>
 
-
-
         <!--cntrlr closing div-->
     </div>
+    
 </div>
