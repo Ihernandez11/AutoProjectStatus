@@ -28,6 +28,7 @@ namespace AutoProjectStatus.Models
         }
 
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int SEQ_NUM { get; set; }
         public string CLIENT_NAME { get; set; }
         public int PROJECT_PRIORITY { get; set; }

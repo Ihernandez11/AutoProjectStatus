@@ -4,7 +4,7 @@
 
 
 
-    //LoginController
+    //Status Table Controller
     var StatusTableController = function ($scope, $http, $window) {
 
         function ToJavaScriptDate(value) {
@@ -34,13 +34,13 @@
             $scope.sortReverse = false;
 
             // set the default search/filter term
-            $scope.projectSearchVal = '';
+            $scope.projectSearchVal = {PROJECT_NAME: '', OPEN_STATUS: ''};
              
             //scope the output list
             $scope.statusList = statusList.data;
 
             //pagination
-            $scope.viewby = 10;
+            $scope.viewby = 25;
             $scope.totalItems = statusList.data.length;
             $scope.currentPage = 1;
             $scope.itemsPerPage = $scope.viewby;
@@ -52,6 +52,13 @@
             };
 
 
+        };
+
+
+        //Clear Search Filter
+        $scope.clearSearchFilter = function () {
+            // set the default search/filter term
+            $scope.projectSearchVal = { PROJECT_NAME: '', OPEN_STATUS: '' };
         };
 
         //set an error message if the data is not available
@@ -111,7 +118,7 @@
         $scope.showPopover = function () {
 
             $('table tbody tr#statusRow' + this.status.SEQ_NUM).popover({
-                //container: 'body',
+                container: 'body',
                 html: true,
                 placement: 'top',
                 selector: 'table tbody tr td.has-popover',
@@ -121,12 +128,12 @@
                     '<div class= "row">' +
                     '<div class="col-sm-6">' +
                     '<ul class="list-inline">' +
-                    '<li class="text-nowrap text-left">' + '<b>Project Type: </b>' + this.status.PROJECT_TYPE + '</li>' +
-                    '<li class="text-nowrap text-left">' + '<b>Project Status: </b>' + this.status.PROJECT_STATUS + '</li>' +
-                    '<li class="text-nowrap text-left">' + '<b>Project Constraints: </b>' + this.status.PROJECT_CONSTRAINTS + '</li>' +
+                    '<li class="text-left">' + '<b>Project Type: </b>' + this.status.PROJECT_TYPE + '</li>' +
+                    '<li class="text-left">' + '<b>Project Status: </b>' + this.status.PROJECT_STATUS + '</li>' +
+                    '<li class="text-left">' + '<b>Project Constraints: </b>' + this.status.PROJECT_CONSTRAINTS + '</li>' +
                     '<li class="text-left">' + '<b>Project Comments: </b>' + this.status.PROJECT_COMMENTS + '</li>' +
-                    '<li class="text-nowrap text-left">' + '<b>Actual End Date: </b>' + this.status.ACTUAL_END_DATE + '</li>' +
-                    '<li class="text-nowrap text-left">' + '<b>Retail Aftersales: </b>' + this.status.RETAIL_AFTERSALES + '</li>' +
+                    '<li class="text-left">' + '<b>Actual End Date: </b>' + this.status.ACTUAL_END_DATE + '</li>' +
+                    '<li class="text-left">' + '<b>Retail Aftersales: </b>' + this.status.RETAIL_AFTERSALES + '</li>' +
 
                     '</ul>' +
                     '</div>' +
@@ -174,6 +181,11 @@
             $scope.editInputValues.ACTUAL_END_DATE = new Date($scope.editInputValues.ACTUAL_END_DATE);
 
         };
+
+
+
+        
+        
 
     };
 

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using PagedList;
+using System.Data.Entity.Infrastructure;
 
 namespace AutoProjectStatus.Controllers
 {
@@ -30,54 +31,95 @@ namespace AutoProjectStatus.Controllers
 
         }
 
-        public ActionResult PagedStatusList(string clientName, int? page)
-        {
-            //Default Autonation as client Name
-            clientName = clientName ?? "Autonation";
-            //declare pageSize and default number
-            int pageSize = 6;
-
-            //if page is null, make it 1
-            int pageNumber = page ?? 1;
-
-            //Create list of records for requested clientName
-            List<ExecutiveStatus> allRecords = db.ExecutiveStatus.Where(c => c.CLIENT_NAME == clientName).ToList();
-
-            //create the model which is a list of Paged Executive Status Lists            
-            PagedList<ExecutiveStatus> model = new PagedList<ExecutiveStatus>(allRecords, pageNumber, pageSize);
-
-            return PartialView(model);
-        }
+      
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult Insert(ExecutiveStatus model)
         {
             //create new seq_num
             model.SEQ_NUM = db.ExecutiveStatus.OrderByDescending(m => m.SEQ_NUM).FirstOrDefault().SEQ_NUM + 1;
 
             //Create Project Type from List
-            model.PROJECT_TYPE = String.Join(",", model.ProjectTypeList);
+            if(model.ProjectTypeList != null)
+            {
+                model.PROJECT_TYPE = String.Join(",", model.ProjectTypeList);
+            }
 
-            db.ExecutiveStatus.Add(model);
-            db.SaveChanges();
+            ExecutiveStatus newStatus = new ExecutiveStatus()
+            {
+                SEQ_NUM = model.SEQ_NUM,
+                CLIENT_NAME = model.CLIENT_NAME,
+                PROJECT_PRIORITY = model.PROJECT_PRIORITY,
+                OPEN_STATUS = model.OPEN_STATUS,
+                RETAIL_AFTERSALES = model.RETAIL_AFTERSALES,
+                PROJECT_NAME = model.PROJECT_NAME,
+                PROJECT_COMMENTS = model.PROJECT_COMMENTS,
+                PROJECT_TYPE = model.PROJECT_TYPE,
+                START_DATE = model.START_DATE,
+                PLANNED_END_DATE = model.PLANNED_END_DATE,
+                ACTUAL_END_DATE = model.ACTUAL_END_DATE,
+                PROJECT_DESCRIPTION = model.PROJECT_DESCRIPTION,
+                PROJECT_STATUS = model.PROJECT_STATUS,
+                PROJECT_CONSTRAINTS = model.PROJECT_CONSTRAINTS,
+                SCHEDULE = model.SCHEDULE,
+                BUDGET = model.BUDGET,
+                CLIENT_SATISFACTION = model.CLIENT_SATISFACTION,
+                SCOPE = model.SCOPE,
+                RESOURCES = model.RESOURCES,
+                OTHER_RISK = model.OTHER_RISK
+            };
 
-            return RedirectToAction("Index");
+
+
+            
+                db.ExecutiveStatus.Add(newStatus);
+                db.SaveChanges();
+                
+                return RedirectToAction("Index");
+            
+
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult Edit(ExecutiveStatus model)
         {
             
+            ExecutiveStatus statusToUpdate = db.ExecutiveStatus.Where(s => s.SEQ_NUM == model.SEQ_NUM).FirstOrDefault();
             //Create Project Type from List
-            model.PROJECT_TYPE = String.Join(",", model.ProjectTypeList);
+            if (model.ProjectTypeList != null)
+            {
+                statusToUpdate.PROJECT_TYPE = String.Join(",", model.ProjectTypeList);
+            }
+            
 
-
-            db.ExecutiveStatus.Add(model);
-            db.SaveChanges();
+            //provide list of model attributes that should be updated
+            if (TryUpdateModel(statusToUpdate,"", 
+                new string[] {"PROJECT_PRIORITY",
+                                "OPEN_STATUS",
+                                "RETAIL_AFTERSALES",
+                                "PROJECT_NAME",
+                                "PROJECT_TYPE",
+                                "START_DATE",
+                                "PLANNED_END_DATE",
+                                "ACTUAL_END_DATE",
+                                "PROJECT_DESCRIPTION",
+                                "PROJECT_STATUS",
+                                "PROJECT_CONSTRAINTS",
+                                "SCHEDULE",
+                                "BUDGET",
+                                "CLIENT_SATISFACTION",
+                                "SCOPE",
+                                "RESOURCES",
+                                "OTHER_RISK"}))
+            {
+                
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                
+            }
 
             return RedirectToAction("Index");
+
         }
 
         public JsonResult GetExecutiveStatus(string clientName)

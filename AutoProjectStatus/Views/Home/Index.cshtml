@@ -10,27 +10,36 @@
     <div ng-controller="StatusTableController">
 
         @*<div class="jumbotron">
-            <h1>Automotive Project Status</h1>
-            <p class="lead">This site will be utilized to insert new project line items and update the status of existing project line items.</p>
+                <h1>Automotive Project Status</h1>
+                <p class="lead">This site will be utilized to insert new project line items and update the status of existing project line items.</p>
 
 
-        </div>*@
+            </div>*@
 
-        
+
 
         <div class="container-fluid">
             <div class="row">
-                
-                    
+
+
                 <div class="col-md-2">
-                    
+
                     <hr class="hr-double" style="border-top: 3px double #8c8b8b;">
-                    
+
                     <p><button type="button" class="btn btn-dark" data-toggle="modal" data-target="#insertModal">Insert New Project</button></p>
                     <p>To edit a project record, click on the highlighted row.</p>
+
+                    <hr class="hr-double" style="border-top: 3px double #8c8b8b;">
+
                     <p class="form-inline">Search by Project Name:</p>
-                    <input type="text" class="form-control" placeholder="Project Name" ng-model="projectSearchVal">
+                    <input type="text" class="form-control" placeholder="Project Name" ng-model="projectSearchVal.PROJECT_NAME">
+
                     <br />
+                    <p class="form-inline">Filter by Open Status:</p>
+                    @Html.DropDownList("OPEN_STATUS", Model.FirstOrDefault().OpenStatusValues, new { @class = "form-control", ng_model = "projectSearchVal.OPEN_STATUS" })
+
+                    <br />
+                    <p><button type="button" class="btn btn-dark" data-toggle="modal" ng-click="clearSearchFilter()">Clear Filter</button></p>
                 </div>
 
 
@@ -59,53 +68,50 @@
                     <hr class="hr-double" style="border-top: 3px double #8c8b8b;">
                     <br>
 
-                    
+
 
 
 
                     <div class="table-responsive">
-                        <table class="table-striped table-hover">
+                        <table class="table-striped table-hover table-bordered">
                             <thead class="thead thead-dark border-bottom">
                                 <tr>
-                                    <th scope="col" class="">
-                                        Client Name
-                                    </th>
-                                    <th scope="col">
-                                        <a href="#" class="text-dark" ng-click="sortType = 'PROJECT_PRIORITY'; sortReverse = !sortReverse">
-                                            Project Priority
-                                            <span ng-show="sortType == 'PROJECT_PRIORITY' && !sortReverse" class="fa fa-caret-down"></span>
-                                            <span ng-show="sortType == 'PROJECT_PRIORITY' && sortReverse" class="fa fa-caret-up"></span>
-                                        </a>
-                                    </th>
-                                    <th scope="col" class="text-dark">
+                                    <th scope="col" class="text-nowrap text-left">
                                         <a href="#" class="text-dark" ng-click="sortType = 'PROJECT_NAME'; sortReverse = !sortReverse">
                                             Project Name
                                             <span ng-show="sortType == 'PROJECT_NAME' && !sortReverse" class="fa fa-caret-down"></span>
                                             <span ng-show="sortType == 'PROJECT_NAME' && sortReverse" class="fa fa-caret-up"></span>
                                         </a>
                                     </th>
-                                    <th scope="col" >
+                                    <th scope="col" class="text-nowrap text-left">
+                                        <a href="#" class="text-dark" ng-click="sortType = 'PROJECT_PRIORITY'; sortReverse = !sortReverse">
+                                            Priority
+                                            <span ng-show="sortType == 'PROJECT_PRIORITY' && !sortReverse" class="fa fa-caret-down"></span>
+                                            <span ng-show="sortType == 'PROJECT_PRIORITY' && sortReverse" class="fa fa-caret-up"></span>
+                                        </a>
+                                    </th>
+                                    <th scope="col" class="text-nowrap text-left">
                                         <a href="#" class="text-dark" ng-click="sortType = 'PROJECT_DESCRIPTION'; sortReverse = !sortReverse">
-                                            Project Description
+                                            Description
                                             <span ng-show="sortType == 'PROJECT_DESCRIPTION' && !sortReverse" class="fa fa-caret-down"></span>
                                             <span ng-show="sortType == 'PROJECT_DESCRIPTION' && sortReverse" class="fa fa-caret-up"></span>
                                         </a>
                                     </th>
-                                    <th scope="col" >
+                                    <th scope="col" class="text-nowrap text-left">
                                         <a href="#" class="text-dark" ng-click="sortType = 'OPEN_STATUS'; sortReverse = !sortReverse">
                                             Open Status
                                             <span ng-show="sortType == 'OPEN_STATUS' && !sortReverse" class="fa fa-caret-down"></span>
                                             <span ng-show="sortType == 'OPEN_STATUS' && sortReverse" class="fa fa-caret-up"></span>
                                         </a>
                                     </th>
-                                    <th scope="col" >
+                                    <th scope="col" class="text-nowrap text-left">
                                         <a href="#" class="text-dark" ng-click="sortType = 'START_DATE'; sortReverse = !sortReverse">
                                             Start Date
                                             <span ng-show="sortType == 'START_DATE' && !sortReverse" class="fa fa-caret-down"></span>
                                             <span ng-show="sortType == 'START_DATE' && sortReverse" class="fa fa-caret-up"></span>
                                         </a>
                                     </th>
-                                    <th scope="col" >
+                                    <th scope="col" class="text-nowrap text-left">
                                         <a href="#" class="text-dark" ng-click="sortType = 'PLANNED_END_DATE'; sortReverse = !sortReverse">
                                             Planned End Date
                                             <span ng-show="sortType == 'PLANNED_END_DATE' && !sortReverse" class="fa fa-caret-down"></span>
@@ -118,14 +124,11 @@
                             <tbody>
                                 <!--Add Edit Modal Data Toggle Attribute to tr so entire row is clickable-->
                                 <tr style="font-size: .75rem;" data-toggle="modal" data-target="#editModal" ng-repeat="status in statusList.slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage)) | orderBy:sortType:sortReverse | filter:projectSearchVal" ng-mouseover="showPopover()" ng-mouseleave="hidePopover()" ng-click="mapToEdit(status)" id="statusRow{{status.SEQ_NUM}}">
-                                    <td scope="col" class="has-popover align-bottom">
-                                        {{status.CLIENT_NAME}}
-                                    </td>
-                                    <td scope="col" class="has-popover align-bottom">
-                                        {{status.PROJECT_PRIORITY}}
-                                    </td>
-                                    <td scope="col" class="has-popover align-bottom">
+                                    <td scope="col" class="align-bottom">
                                         {{status.PROJECT_NAME}}
+                                    </td>
+                                    <td scope="col" class="align-bottom">
+                                        {{status.PROJECT_PRIORITY}}
                                     </td>
                                     <td scope="col" class="align-bottom">
                                         {{status.PROJECT_DESCRIPTION}}
@@ -153,7 +156,7 @@
                     </div>
                     <!--Container Div End-->
                 </div>
-                
+
             </div>
         </div>
 
@@ -172,11 +175,9 @@
                         </button>
                     </div>
 
-                    @using (Html.BeginForm("Insert", "Home", FormMethod.Post))
+
+                    @using (Html.BeginForm("Insert", "Home", FormMethod.Post, new { name = "inputForm" }))
                     {
-
-                        @Html.AntiForgeryToken()
-
                         <div class="modal-body">
                             <div class="container-fluid">
                                 <div class="row">
@@ -188,7 +189,10 @@
                                         </div>
                                         <div class="form-group">
                                             @Html.LabelFor(m => m.FirstOrDefault().PROJECT_PRIORITY, "Project Priority", new { @class = "col-form-label" })
-                                            @Html.TextBox("PROJECT_PRIORITY", null, new { @class = "form-control" })
+                                            <div ng-show="inputForm.$submitted || inputForm.PROJECT_PRIORITY.$touched">
+                                                <small class="text-danger" ng-show="inputForm.PROJECT_PRIORITY.$error.number">Value must be a number.</small>
+                                            </div>
+                                            <input class="form-control" id="PROJECT_PRIORITY" name="PROJECT_PRIORITY" type="number" min="0" value="" ng-model="PROJECT_PRIORITY" />
                                         </div>
                                         <div class="form-group">
                                             @Html.LabelFor(m => m.FirstOrDefault().OPEN_STATUS, "Open Status", new { @class = "col-form-label" })
@@ -200,7 +204,10 @@
                                         </div>
                                         <div class="form-group">
                                             @Html.LabelFor(m => m.FirstOrDefault().PROJECT_NAME, "Project Name", new { @class = "col-form-label" })
-                                            @Html.TextBox("PROJECT_NAME", null, new { @class = "form-control" })
+                                            <div ng-show="inputForm.$submitted || inputForm.PROJECT_NAME.$touched">
+                                                <small class="text-danger" ng-show="inputForm.PROJECT_NAME.$error.maxlength">Value must not exceed 118 characters.</small>
+                                            </div>
+                                            <input class="form-control" id="PROJECT_NAME" name="PROJECT_NAME" type="text" value="" ng-maxlength="118" ng-model="PROJECT_NAME" />
                                         </div>
                                         <div class="form-group">
                                             @Html.LabelFor(m => m.FirstOrDefault().PROJECT_TYPE, "Project Type", new { @class = "col-form-label" })
@@ -213,11 +220,18 @@
                                         </div>
                                         <div class="form-group">
                                             @Html.LabelFor(m => m.FirstOrDefault().PROJECT_DESCRIPTION, "Project Description", new { @class = "col-form-label" })
-                                            @Html.TextArea("PROJECT_DESCRIPTION", new { @class = "form-control" })
+                                            <div ng-show="inputForm.$submitted || inputForm.PROJECT_DESCRIPTION.$touched">
+                                                <small class="text-danger" ng-show="inputForm.PROJECT_DESCRIPTION.$error.maxlength">Value must not exceed 473 characters.</small>
+                                            </div>
+                                            <textarea class="form-control" cols="20" id="PROJECT_DESCRIPTION" name="PROJECT_DESCRIPTION" rows="2" ng-maxlength="473" ng-model="PROJECT_DESCRIPTION"> </textarea>
+
                                         </div>
                                         <div class="form-group">
                                             @Html.LabelFor(m => m.FirstOrDefault().PROJECT_COMMENTS, "Project Comments", new { @class = "col-form-label" })
-                                            @Html.TextArea("PROJECT_COMMENTS", new { @class = "form-control" })
+                                            <div ng-show="inputForm.$submitted || inputForm.PROJECT_COMMENTS.$touched">
+                                                <small class="text-danger" ng-show="inputForm.PROJECT_COMMENTS.$error.maxlength">Value must not exceed 169 characters.</small>
+                                            </div>
+                                            <textarea class="form-control" cols="20" id="PROJECT_COMMENTS" name="PROJECT_COMMENTS" rows="2" ng-maxlength="169" ng-model="PROJECT_COMMENTS"></textarea>
                                         </div>
                                     </div>
 
@@ -268,9 +282,10 @@
 
                             </div>
                         </div>
+
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <input type="submit" value="Save" class="btn btn-primary" />
+                            <input type="submit" value="Save" class="btn btn-primary" ng-disabled="inputForm.$invalid" />
                         </div>
                     }
                 </div>
@@ -278,17 +293,17 @@
         </div>
 
         <!--Edit Data Modal-->
-        <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="Edit Status" aria-hidden="true">
+        <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalTitle" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="insertModalLabel">Insert New Project</h5>
+                        <h5 class="modal-title" id="editModalTitle">Edit Project - {{editInputValues.PROJECT_NAME}}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
 
-                    @using (Html.BeginForm("Edit", "Home", FormMethod.Post))
+                    @using (Html.BeginForm("Edit", "Home", FormMethod.Post, new { name = "editForm"}))
                     {
 
                         @Html.AntiForgeryToken()
@@ -304,13 +319,16 @@
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label class="col-form-label" for="CLIENT_NAME">Client Name</label>
-                                            <select class="form-control" id="CLIENT_NAME" name="CLIENT_NAME" ng-model="editInputValues.CLIENT_NAME">
+                                            <select disabled class="form-control disabled" id="CLIENT_NAME" name="CLIENT_NAME" ng-model="editInputValues.CLIENT_NAME">
                                                 <option ng-repeat="clientName in editInputValues.ClientNameValues" value="{{clientName.Value}}">{{clientName.Value}}</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
                                             @Html.LabelFor(m => m.FirstOrDefault().PROJECT_PRIORITY, "Project Priority", new { @class = "col-form-label" })
-                                            @Html.TextBox("PROJECT_PRIORITY", null, new { @class = "form-control", @id = "PROJECT_PRIORITY", ng_Model = "editInputValues.PROJECT_PRIORITY" })
+                                            <div ng-show="editForm.$submitted || editForm.PROJECT_PRIORITY.$touched">
+                                                <small class="text-danger" ng-show="editForm.PROJECT_PRIORITY.$error.number">Value must be a number.</small>
+                                            </div>
+                                            <input class="form-control" id="PROJECT_PRIORITY" name="PROJECT_PRIORITY" type="number" min="0" value="" ng-model="editInputValues.PROJECT_PRIORITY" />
                                         </div>
                                         <div class="form-group">
                                             <label class="col-form-label" for="OPEN_STATUS">Open Status</label>
@@ -326,7 +344,10 @@
                                         </div>
                                         <div class="form-group">
                                             @Html.LabelFor(m => m.FirstOrDefault().PROJECT_NAME, "Project Name", new { @class = "col-form-label" })
-                                            @Html.TextBox("PROJECT_NAME", null, new { @class = "form-control", @id = "PROJECT_NAME", ng_Model = "editInputValues.PROJECT_NAME" })
+                                            <div ng-show="editForm.$submitted || editForm.PROJECT_NAME.$touched">
+                                                <small class="text-danger" ng-show="editForm.PROJECT_NAME.$error.maxlength">Value must not exceed 118 characters.</small>
+                                            </div>
+                                            <input class="form-control" id="PROJECT_NAME" name="PROJECT_NAME" type="text" value="" ng-maxlength="118" ng-model="editInputValues.PROJECT_NAME" />
                                         </div>
                                         <div class="form-group">
                                             @Html.LabelFor(m => m.FirstOrDefault().PROJECT_TYPE, "Project Type", new { @class = "col-form-label" })
@@ -339,11 +360,18 @@
                                         </div>
                                         <div class="form-group">
                                             @Html.LabelFor(m => m.FirstOrDefault().PROJECT_DESCRIPTION, "Project Description", new { @class = "col-form-label" })
-                                            @Html.TextArea("PROJECT_DESCRIPTION", new { @class = "form-control", @id = "PROJECT_DESCRIPTION", ng_Model = "editInputValues.PROJECT_DESCRIPTION" })
+                                            <div ng-show="editForm.$submitted || editForm.PROJECT_DESCRIPTION.$touched">
+                                                <small class="text-danger" ng-show="editForm.PROJECT_DESCRIPTION.$error.maxlength">Value must not exceed 473 characters.</small>
+                                            </div>
+                                            <textarea class="form-control" cols="20" id="PROJECT_DESCRIPTION" name="PROJECT_DESCRIPTION" rows="2" ng-maxlength="473" ng-model="editInputValues.PROJECT_DESCRIPTION"> </textarea>
+
                                         </div>
                                         <div class="form-group">
                                             @Html.LabelFor(m => m.FirstOrDefault().PROJECT_COMMENTS, "Project Comments", new { @class = "col-form-label" })
-                                            @Html.TextArea("PROJECT_COMMENTS", new { @class = "form-control", @id = "PROJECT_COMMENTS", ng_Model = "editInputValues.PROJECT_COMMENTS" })
+                                            <div ng-show="editForm.$submitted || editForm.PROJECT_COMMENTS.$touched">
+                                                <small class="text-danger" ng-show="editForm.PROJECT_COMMENTS.$error.maxlength">Value must not exceed 169 characters.</small>
+                                            </div>
+                                            <textarea class="form-control" cols="20" id="PROJECT_COMMENTS" name="PROJECT_COMMENTS" rows="2" ng-maxlength="169" ng-model="editInputValues.PROJECT_COMMENTS"></textarea>
                                         </div>
                                     </div>
 
@@ -410,7 +438,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <input type="submit" value="Save" class="btn btn-primary" />
+                            <input type="submit" value="Save" class="btn btn-primary" ng-disabled="editForm.$invalid" />
                         </div>
                     }
                 </div>
@@ -419,5 +447,5 @@
 
         <!--cntrlr closing div-->
     </div>
-    
+
 </div>
