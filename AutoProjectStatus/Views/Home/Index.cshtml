@@ -10,11 +10,11 @@
     <div ng-controller="StatusTableController">
 
         @*<div class="jumbotron">
-                <h1>Automotive Project Status</h1>
-                <p class="lead">This site will be utilized to insert new project line items and update the status of existing project line items.</p>
+            <h1>Automotive Project Status</h1>
+            <p class="lead">This site will be utilized to insert new project line items and update the status of existing project line items.</p>
 
 
-            </div>*@
+        </div>*@
 
 
 
@@ -27,7 +27,9 @@
                     <hr class="hr-double" style="border-top: 3px double #8c8b8b;">
 
                     <p><button type="button" class="btn btn-dark" data-toggle="modal" data-target="#insertModal">Insert New Project</button></p>
-                    <p>To edit a project record, click on the highlighted row.</p>
+                    <p>To edit a project record, click on the <i class="fas fa-edit"></i> icon.</p>
+                    <p>To clone a project record, click on the <i class="far fa-clone"></i> icon.</p>
+                    <p>To see additional details about a project record, hover over the <i class="fas fa-info-circle"></i> icon.</p>
 
                     <hr class="hr-double" style="border-top: 3px double #8c8b8b;">
 
@@ -55,9 +57,14 @@
 
                                 foreach (var clientName in Model.Select(s => s.CLIENT_NAME).Distinct())
                                 {
+                                    string hrefVal = "";
+
                                     string tabNum = "tab" + i;
-                                    string hrefVal = "#" + clientName.Replace(" ", "-").ToString();
-                                    <li class="nav-item" id=@tabNum><a id=@tabNum class="nav-link  @hrefVal" ng-click="updateActive(&quot;@tabNum&quot;)" href=@hrefVal>@clientName</a></li>
+                                    if(clientName != null)
+                                    {
+                                        hrefVal = "#" + clientName.Replace(" ", "-").ToString();
+                                    }
+                                                                        <li class="nav-item" id=@tabNum><a id=@tabNum class="nav-link  @hrefVal" ng-click="updateActive(&quot;@tabNum&quot;)" href=@hrefVal>@clientName</a></li>
                                     i++;
                                 }
                             }
@@ -76,6 +83,9 @@
                         <table class="table-striped table-hover table-bordered">
                             <thead class="thead thead-dark border-bottom">
                                 <tr>
+                                    <th scope="col" class="text-nowrap text-left">
+
+                                    </th>
                                     <th scope="col" class="text-nowrap text-left">
                                         <a href="#" class="text-dark" ng-click="sortType = 'PROJECT_NAME'; sortReverse = !sortReverse">
                                             Project Name
@@ -123,7 +133,12 @@
 
                             <tbody>
                                 <!--Add Edit Modal Data Toggle Attribute to tr so entire row is clickable-->
-                                <tr style="font-size: .75rem;" data-toggle="modal" data-target="#editModal" ng-repeat="status in statusList.slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage)) | orderBy:sortType:sortReverse | filter:projectSearchVal" ng-mouseover="showPopover()" ng-mouseleave="hidePopover()" ng-click="mapToEdit(status)" id="statusRow{{status.SEQ_NUM}}">
+                                <tr style="font-size: .75rem;" ng-repeat="status in statusList.slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage)) | orderBy:sortType:sortReverse | filter:projectSearchVal" id="statusRow{{status.SEQ_NUM}}">
+                                    <td scope="col" class="align-bottom text-nowrap text-left" >
+                                        <a data-toggle="modal" data-target="#editModal" ng-click="mapToEdit(status)" title="Edit"><i class="fas fa-edit fa-1x"></i></a>
+                                        <a data-toggle="modal" data-target="#cloneModal" ng-click="mapToClone(status)" title="Clone"><i class="far fa-clone fa-1x"></i></a>
+                                        <a ng-mouseover="showPopover()" ng-mouseleave="hidePopover()" title="Details"><i class="fas fa-info-circle fa-1x"></i></a>
+                                    </td>
                                     <td scope="col" class="align-bottom">
                                         {{status.PROJECT_NAME}}
                                     </td>
@@ -303,7 +318,7 @@
                         </button>
                     </div>
 
-                    @using (Html.BeginForm("Edit", "Home", FormMethod.Post, new { name = "editForm"}))
+                    @using (Html.BeginForm("Edit", "Home", FormMethod.Post, new { name = "editForm" }))
                     {
 
                         @Html.AntiForgeryToken()
@@ -439,6 +454,154 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <input type="submit" value="Save" class="btn btn-primary" ng-disabled="editForm.$invalid" />
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!--Clone Data Modal-->
+        <div class="modal fade" id="cloneModal" tabindex="-1" role="dialog" aria-labelledby="cloneModalTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="insertModalLabel">Clone Project</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+
+                    @using (Html.BeginForm("Insert", "Home", FormMethod.Post, new { name = "cloneForm" }))
+                    {
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <!--Left Side of Modal-->
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="col-form-label" for="CLIENT_NAME">Client Name</label>
+                                            <select class="form-control" id="CLIENT_NAME" name="CLIENT_NAME" ng-model="cloneInputValues.CLIENT_NAME" >
+                                                <option ng-repeat="clientName in cloneInputValues.ClientNameValues" value="{{clientName.Value}}">{{clientName.Value}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().PROJECT_PRIORITY, "Project Priority", new { @class = "col-form-label" })
+                                            <div ng-show="cloneForm.$submitted || cloneForm.PROJECT_PRIORITY.$touched">
+                                                <small class="text-danger" ng-show="cloneForm.PROJECT_PRIORITY.$error.number">Value must be a number.</small>
+                                            </div>
+                                            <input class="form-control" id="PROJECT_PRIORITY" name="PROJECT_PRIORITY" type="number" min="0" value="" ng-model="cloneInputValues.PROJECT_PRIORITY" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label" for="OPEN_STATUS">Open Status</label>
+                                            <select class="form-control" id="OPEN_STATUS" name="OPEN_STATUS" ng-model="cloneInputValues.OPEN_STATUS">
+                                                <option ng-repeat="openStatus in cloneInputValues.OpenStatusValues" value="{{openStatus.Value}}">{{openStatus.Value}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label" for="RETAIL_AFTERSALES">Retail Aftersales</label>
+                                            <select class="form-control" id="RETAIL_AFTERSALES" name="RETAIL_AFTERSALES" ng-model="cloneInputValues.RETAIL_AFTERSALES">
+                                                <option ng-repeat="retail in cloneInputValues.RetailAfterSalesValues" value="{{retail.Value}}">{{retail.Value}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().PROJECT_NAME, "Project Name", new { @class = "col-form-label" })
+                                            <div ng-show="cloneForm.$submitted || cloneForm.PROJECT_NAME.$touched">
+                                                <small class="text-danger" ng-show="cloneForm.PROJECT_NAME.$error.maxlength">Value must not exceed 118 characters.</small>
+                                            </div>
+                                            <input class="form-control" id="PROJECT_NAME" name="PROJECT_NAME" type="text" value="" ng-maxlength="118" ng-model="cloneInputValues.PROJECT_NAME" />
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().PROJECT_TYPE, "Project Type", new { @class = "col-form-label" })
+                                            @foreach (var item in Model.FirstOrDefault().GetAllProjectTypes())
+                                            {
+                                                <div class="checkbox">
+                                                    <label><input name="ProjectTypeList" type="checkbox" id="PROJECT_TYPE" value="@item" ng-checked="cloneInputValues.PROJECT_TYPE.includes('@item')">@item</label>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().PROJECT_DESCRIPTION, "Project Description", new { @class = "col-form-label" })
+                                            <div ng-show="cloneForm.$submitted || cloneForm.PROJECT_DESCRIPTION.$touched">
+                                                <small class="text-danger" ng-show="cloneForm.PROJECT_DESCRIPTION.$error.maxlength">Value must not exceed 473 characters.</small>
+                                            </div>
+                                            <textarea class="form-control" cols="20" id="PROJECT_DESCRIPTION" name="PROJECT_DESCRIPTION" rows="2" ng-maxlength="473" ng-model="cloneInputValues.PROJECT_DESCRIPTION"> </textarea>
+
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().PROJECT_COMMENTS, "Project Comments", new { @class = "col-form-label" })
+                                            <div ng-show="cloneForm.$submitted || cloneForm.PROJECT_COMMENTS.$touched">
+                                                <small class="text-danger" ng-show="cloneForm.PROJECT_COMMENTS.$error.maxlength">Value must not exceed 169 characters.</small>
+                                            </div>
+                                            <textarea class="form-control" cols="20" id="PROJECT_COMMENTS" name="PROJECT_COMMENTS" rows="2" ng-maxlength="169" ng-model="cloneInputValues.PROJECT_COMMENTS"></textarea>
+                                        </div>
+                                    </div>
+
+                                    <!--Right Side of Modal-->
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().START_DATE, "Start Date", new { @class = "col-form-label" })
+                                            <input type="date" class="form-control" id="START_DATE" name="START_DATE" ng-model="cloneInputValues.START_DATE">
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().PLANNED_END_DATE, "Planned End Date", new { @class = "col-form-label" })
+                                            <input type="date" class="form-control" id="PLANNED_END_DATE" name="PLANNED_END_DATE" ng-model="cloneInputValues.PLANNED_END_DATE">
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FirstOrDefault().ACTUAL_END_DATE, "Actual End Date", new { @class = "col-form-label" })
+                                            <input type="date" class="form-control" id="ACTUAL_END_DATE" name="ACTUAL_END_DATE" ng-model="cloneInputValues.ACTUAL_END_DATE">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label" for="PROJECT_CONSTRAINTS">Project Constraints</label>
+                                            <select class="form-control" id="PROJECT_CONSTRAINTS" name="PROJECT_CONSTRAINTS" ng-model="cloneInputValues.PROJECT_CONSTRAINTS">
+                                                <option ng-repeat="pc in cloneInputValues.ProjectContstraintValues" value="{{pc.Value}}">{{pc.Value}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label" for="SCHEDULE">Schedule</label>
+                                            <select class="form-control" id="SCHEDULE" name="SCHEDULE" ng-model="cloneInputValues.SCHEDULE">
+                                                <option ng-repeat="sch in cloneInputValues.ScheduleValues" value="{{sch.Value}}">{{sch.Value}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label" for="BUDGET">Budget</label>
+                                            <select class="form-control" id="BUDGET" name="BUDGET" ng-model="cloneInputValues.BUDGET">
+                                                <option ng-repeat="bgt in cloneInputValues.BudgetValues" value="{{bgt.Value}}">{{bgt.Value}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label" for="CLIENT_SATISFACTION">Client Satisfaction</label>
+                                            <select class="form-control" id="CLIENT_SATISFACTION" name="CLIENT_SATISFACTION" ng-model="cloneInputValues.CLIENT_SATISFACTION">
+                                                <option ng-repeat="csf in cloneInputValues.ClientSatisfactionValues" value="{{csf.Value}}">{{csf.Value}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label" for="SCOPE">Scope</label>
+                                            <select class="form-control" id="SCOPE" name="SCOPE" ng-model="cloneInputValues.SCOPE">
+                                                <option ng-repeat="scope in cloneInputValues.ScopeValues" value="{{scope.Value}}">{{scope.Value}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label" for="RESOURCES">Resources</label>
+                                            <select class="form-control" id="RESOURCES" name="RESOURCES" ng-model="cloneInputValues.RESOURCES">
+                                                <option ng-repeat="rsc in cloneInputValues.ResourceValues" value="{{rsc.Value}}">{{rsc.Value}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label" for="OTHER_RISK">Other Risk</label>
+                                            <select class="form-control" id="OTHER_RISK" name="OTHER_RISK" ng-model="cloneInputValues.OTHER_RISK">
+                                                <option ng-repeat="risk in cloneInputValues.OtherRiskValues" value="{{risk.Value}}">{{risk.Value}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <input type="submit" value="Save" class="btn btn-primary" ng-disabled="cloneForm.$invalid" />
                         </div>
                     }
                 </div>

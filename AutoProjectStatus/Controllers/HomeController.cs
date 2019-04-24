@@ -36,8 +36,11 @@ namespace AutoProjectStatus.Controllers
         [HttpPost]
         public ActionResult Insert(ExecutiveStatus model)
         {
+            
             //create new seq_num
             model.SEQ_NUM = db.ExecutiveStatus.OrderByDescending(m => m.SEQ_NUM).FirstOrDefault().SEQ_NUM + 1;
+            
+            
 
             //Create Project Type from List
             if(model.ProjectTypeList != null)
@@ -74,8 +77,11 @@ namespace AutoProjectStatus.Controllers
             
                 db.ExecutiveStatus.Add(newStatus);
                 db.SaveChanges();
+
+            string newURL = "/Home/Index#" + newStatus.CLIENT_NAME;
                 
-                return RedirectToAction("Index");
+                //return RedirectToAction("Index");
+                return Redirect(newURL);
             
 
         }

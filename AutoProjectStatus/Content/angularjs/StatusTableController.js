@@ -123,7 +123,7 @@
                 placement: 'top',
                 selector: 'table tbody tr td.has-popover',
                 template: '<div class="popover status-popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>',
-                title: this.status.PROJECT_NAME + '<button type="button" class="close" data-dismiss="popover" aria-label="Close"> <span aria-hidden="true">×</span></button>',
+                title: this.status.PROJECT_NAME,
                 content: '<div class="container-fluid-popover">' +
                     '<div class= "row">' +
                     '<div class="col-sm-6">' +
@@ -183,7 +183,31 @@
         };
 
 
+        //update cloneModal with clicked status row values
+        $scope.mapToClone = function (statusList) {
 
+            
+            //Put the statusList in a scope variable and then put the scope {{variable}} in the edit modal 
+            $scope.cloneInputValues = statusList;
+
+            //Convert the Project Types to an array to map each value to the corresponding checkbox
+            if ($scope.cloneInputValues.PROJECT_TYPE.includes(',')) {
+                $scope.cloneInputValues.PROJECT_TYPE = $scope.cloneInputValues.PROJECT_TYPE.split(',');
+
+                for (var i = 0; i <= $scope.cloneInputValues.PROJECT_TYPE.length; i++) {
+                    if ($scope.cloneInputValues.PROJECT_TYPE[i]) {
+                        $scope.cloneInputValues.PROJECT_TYPE[i] = $scope.cloneInputValues.PROJECT_TYPE[i].trim();
+                    }
+                }
+            }
+
+
+            //Convert the Date fields to map to the date type input value
+            $scope.cloneInputValues.START_DATE = new Date($scope.cloneInputValues.START_DATE);
+            $scope.cloneInputValues.PLANNED_END_DATE = new Date($scope.cloneInputValues.PLANNED_END_DATE);
+            $scope.cloneInputValues.ACTUAL_END_DATE = new Date($scope.cloneInputValues.ACTUAL_END_DATE);
+
+        };
         
         
 
