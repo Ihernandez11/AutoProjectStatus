@@ -34,11 +34,12 @@
                     <hr class="hr-double" style="border-top: 3px double #8c8b8b;">
 
                     <p class="form-inline">Search by Project Name:</p>
-                    <input type="text" class="form-control" placeholder="Project Name" ng-model="projectSearchVal.PROJECT_NAME">
+                    <input type="text" class="form-control" placeholder="Project Name" ng-model="projectSearchVal.PROJECT_NAME" >
 
                     <br />
                     <p class="form-inline">Filter by Open Status:</p>
                     @Html.DropDownList("OPEN_STATUS", Model.FirstOrDefault().OpenStatusValues, new { @class = "form-control", ng_model = "projectSearchVal.OPEN_STATUS" })
+                   
 
                     <br />
                     <p><button type="button" class="btn btn-dark" data-toggle="modal" ng-click="clearSearchFilter()">Clear Filter</button></p>
@@ -71,9 +72,9 @@
                         </ul>
                     </div>
 
-                    <br>
+                    
                     <hr class="hr-double" style="border-top: 3px double #8c8b8b;">
-                    <br>
+                    
 
 
 
@@ -132,9 +133,8 @@
                             </thead>
 
                             <tbody>
-                                <!--Add Edit Modal Data Toggle Attribute to tr so entire row is clickable-->
-                                <tr style="font-size: .75rem;" ng-repeat="status in statusList.slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage)) | orderBy:sortType:sortReverse | filter:projectSearchVal" id="statusRow{{status.SEQ_NUM}}">
-                                    <td scope="col" class="align-bottom text-nowrap text-left" >
+                                <tr style="font-size: .75rem;" ng-repeat="status in filteredStatus =  (statusList | filter:projectSearchVal) | orderBy:sortType:sortReverse | filter:projectSearchVal | startFrom:(currentPage - 1)*pageSize | limitTo:pageSize" id="statusRow{{status.SEQ_NUM}}">
+                                    <td scope="col" class="align-bottom text-nowrap text-left">
                                         <a data-toggle="modal" data-target="#editModal" ng-click="mapToEdit(status)" title="Edit"><i class="fas fa-edit fa-1x"></i></a>
                                         <a data-toggle="modal" data-target="#cloneModal" ng-click="mapToClone(status)" title="Clone"><i class="far fa-clone fa-1x"></i></a>
                                         <a ng-mouseover="showPopover()" ng-mouseleave="hidePopover()" title="Details"><i class="fas fa-info-circle fa-1x"></i></a>
@@ -164,9 +164,14 @@
 
                         </table>
                         <!--pagination-->
-
-                        <pagination total-items="totalItems" ng-model="currentPage" max-size="maxSize" class="pagination-sm " boundary-links="true" rotate="false" num-pages="numPages" items-per-page="itemsPerPage"></pagination>
-                        <h6><span class="badge badge-dark">Page: {{currentPage}} / {{numPages}}</span></h6>
+                        <nav id="pagination">
+                            <ul class="pagination">
+                                <li id="previousButton" class="page-item" ng-click="currentPage = currentPage - 1"><a class="page-link"><i class="fas fa-arrow-circle-left"></i></a></li>
+                                <li class="page-item disabled" ><a class="page-link">Page: {{currentPage}} / {{getNumberPages(filteredStatus)}}</a></li>
+                                <li id="nextButton" class="page-item" ng-click="currentPage = currentPage + 1"><a class="page-link"><i class="fas fa-arrow-circle-right"></i></a></li>
+                            </ul>
+                        </nav>
+                        
 
                     </div>
                     <!--Container Div End-->

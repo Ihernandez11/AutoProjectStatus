@@ -5,8 +5,9 @@
 
 
     //Status Table Controller
-    var StatusTableController = function ($scope, $http, $window) {
+    var StatusTableController = function ($scope, $http, $window, $filter) {
 
+        //function to return proper date format
         function ToJavaScriptDate(value) {
             var pattern = /Date\(([^)]+)\)/;
             var results = pattern.exec(value);
@@ -15,6 +16,17 @@
                 return (dt.getMonth() + 1) + "/" + dt.getDate() + "/" + dt.getFullYear();
             }
         }
+
+        //Filtering 
+        // set the default sort type 
+        $scope.sortType = 'PROJECT_PRIORITY';
+
+        // set the default sort order 
+        $scope.sortReverse = false;
+
+        // set the default search/filter term
+        $scope.projectSearchVal = { PROJECT_NAME: '', OPEN_STATUS: '' };
+
 
 
         //Set the data returned to a scope variable
@@ -27,39 +39,9 @@
                 statusList.data[i].ACTUAL_END_DATE = ToJavaScriptDate(statusList.data[i].ACTUAL_END_DATE);
             }
 
-            // set the default sort type 
-            $scope.sortType = 'PROJECT_PRIORITY';
-
-            // set the default sort order 
-            $scope.sortReverse = false;
-
-            // set the default search/filter term
-            $scope.projectSearchVal = {PROJECT_NAME: '', OPEN_STATUS: ''};
-             
-            //scope the output list
             $scope.statusList = statusList.data;
-
-            //pagination
-            $scope.viewby = 25;
-            $scope.totalItems = statusList.data.length;
-            $scope.currentPage = 1;
-            $scope.itemsPerPage = $scope.viewby;
-            $scope.maxSize = 5; //Number of pager buttons to show
-
-
-            $scope.setPage = function (pageNo) {
-                $scope.currentPage = pageNo;
-            };
-
-
         };
 
-
-        //Clear Search Filter
-        $scope.clearSearchFilter = function () {
-            // set the default search/filter term
-            $scope.projectSearchVal = { PROJECT_NAME: '', OPEN_STATUS: '' };
-        };
 
         //set an error message if the data is not available
         var onError = function () {
@@ -98,7 +80,6 @@
         }
 
 
-
         //Update data grid when tab is clicked
         $scope.updateActive = function (tabNum) {
             if ($('#tabs li a#' + tabNum).hasClass('inactive')) {
@@ -110,7 +91,51 @@
 
             //get table data
             assignClientNameAndGetData();
+        };
 
+        //Pagination
+        $scope.currentPage = 1;
+        $scope.pageSize = 25;
+
+        //update number of total pages when filter is applied
+        $scope.getNumberPages = function (filteredStatus) {
+            console.log($scope.currentPage);
+            //if current page = 1, disable previous button
+            if (filteredStatus) {
+                if ($scope.currentPage <= 1 && $scope.currentPage < filteredStatus.length / $scope.pageSize) {
+                    //add disabled class to previous button
+                    $('nav#pagination li#previousButton').addClass('disabled');
+                    $('nav#pagination li#nextButton').removeClass('disabled');
+                }
+
+                //if current page >= numberOfPages, disable next button
+                if ($scope.currentPage > 1 && $scope.currentPage >= filteredStatus.length / $scope.pageSize) {
+                    $('nav#pagination li#nextButton').addClass('disabled');
+                    $('nav#pagination li#previousButton').removeClass('disabled');
+                }
+
+                //if current page = 1 && current page >= numberOfPage, disable both
+                if ($scope.currentPage <= 1 && $scope.currentPage >= filteredStatus.length / $scope.pageSize) {
+                    $('nav#pagination li#nextButton').addClass('disabled');
+                    $('nav#pagination li#previousButton').addClass('disabled');
+                }
+
+
+                //if current page < numberOfPages && current Page > 1, enable both buttons 
+                if ($scope.currentPage > 1 && $scope.currentPage < filteredStatus.length / $scope.pageSize) {
+                    $('nav#pagination li#nextButton').removeClass('disabled');
+                    $('nav#pagination li#previousButton').removeClass('disabled');
+                }
+
+                return Math.ceil(filteredStatus.length / $scope.pageSize);
+            }
+        };
+
+
+        //Clear Search Filter
+        $scope.clearSearchFilter = function () {
+            // set the default search/filter term
+            $scope.projectSearchVal = { PROJECT_NAME: '', OPEN_STATUS: '' };
         };
 
 
@@ -186,7 +211,7 @@
         //update cloneModal with clicked status row values
         $scope.mapToClone = function (statusList) {
 
-            
+
             //Put the statusList in a scope variable and then put the scope {{variable}} in the edit modal 
             $scope.cloneInputValues = statusList;
 
@@ -208,14 +233,22 @@
             $scope.cloneInputValues.ACTUAL_END_DATE = new Date($scope.cloneInputValues.ACTUAL_END_DATE);
 
         };
-        
-        
+
+
 
     };
 
-
+    app.filter('startFrom', function () {
+        return function (input, startFromNumber) {
+            if (input) {
+                startFromNumber = +startFromNumber;
+                return input.slice(startFromNumber);
+            }
+        };
+    });
 
     app.controller("StatusTableController", ["$scope", "$http", "$window", "$filter", StatusTableController]);
+
 
 
     //closing app function bracket

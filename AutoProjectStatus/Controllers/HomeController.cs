@@ -24,9 +24,12 @@ namespace AutoProjectStatus.Controllers
         {
 
             //Remove any records from viewModel where client name is null
-            List<ExecutiveStatus> model = db.ExecutiveStatus.Where(x => x.CLIENT_NAME != "").ToList();
-            
+            List<ExecutiveStatus> model = db.ExecutiveStatus.Where(x => x.CLIENT_NAME != "" && x.CLIENT_NAME != null)
+                .ToList();
 
+            List<string> names = model.GroupBy(x => x.CLIENT_NAME).Select(g => g.First().CLIENT_NAME).ToList();
+
+            
             return View(model);
 
         }
@@ -80,7 +83,7 @@ namespace AutoProjectStatus.Controllers
 
             string newURL = "/Home/Index#" + newStatus.CLIENT_NAME;
                 
-                //return RedirectToAction("Index");
+                
                 return Redirect(newURL);
             
 
@@ -120,8 +123,9 @@ namespace AutoProjectStatus.Controllers
             {
                 
                     db.SaveChanges();
-                    return RedirectToAction("Index");
-                
+                string newURL = "/Home/Index#" + statusToUpdate.CLIENT_NAME;
+                return Redirect(newURL);
+
             }
 
             return RedirectToAction("Index");
