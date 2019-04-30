@@ -91,6 +91,7 @@
 
             //get table data
             assignClientNameAndGetData();
+            $scope.currentPage = 1;
         };
 
         //Pagination
@@ -105,26 +106,34 @@
                 if ($scope.currentPage <= 1 && $scope.currentPage < filteredStatus.length / $scope.pageSize) {
                     //add disabled class to previous button
                     $('nav#pagination li#previousButton').addClass('disabled');
+                    $('nav#pagination li#previousButton').addClass('inactiveLink');
                     $('nav#pagination li#nextButton').removeClass('disabled');
+                    $('nav#pagination li#nextButton').removeClass('inactiveLink');
                 }
 
                 //if current page >= numberOfPages, disable next button
                 if ($scope.currentPage > 1 && $scope.currentPage >= filteredStatus.length / $scope.pageSize) {
                     $('nav#pagination li#nextButton').addClass('disabled');
+                    $('nav#pagination li#nextButton').addClass('inactiveLink');
                     $('nav#pagination li#previousButton').removeClass('disabled');
+                    $('nav#pagination li#previousButton').removeClass('inactiveLink');
                 }
 
                 //if current page = 1 && current page >= numberOfPage, disable both
                 if ($scope.currentPage <= 1 && $scope.currentPage >= filteredStatus.length / $scope.pageSize) {
                     $('nav#pagination li#nextButton').addClass('disabled');
+                    $('nav#pagination li#nextButton').addClass('inactiveLink');
                     $('nav#pagination li#previousButton').addClass('disabled');
+                    $('nav#pagination li#previousButton').addClass('inactiveLink');
                 }
 
 
                 //if current page < numberOfPages && current Page > 1, enable both buttons 
                 if ($scope.currentPage > 1 && $scope.currentPage < filteredStatus.length / $scope.pageSize) {
                     $('nav#pagination li#nextButton').removeClass('disabled');
+                    $('nav#pagination li#nextButton').removeClass('inactiveLink');
                     $('nav#pagination li#previousButton').removeClass('disabled');
+                    $('nav#pagination li#previousButton').removeClass('inactiveLink');
                 }
 
                 return Math.ceil(filteredStatus.length / $scope.pageSize);
@@ -136,6 +145,7 @@
         $scope.clearSearchFilter = function () {
             // set the default search/filter term
             $scope.projectSearchVal = { PROJECT_NAME: '', OPEN_STATUS: '' };
+            $scope.currentPage = 1;
         };
 
 
