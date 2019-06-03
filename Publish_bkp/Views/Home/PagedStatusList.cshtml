@@ -1,0 +1,153 @@
+﻿@model PagedList.IPagedList<AutoProjectStatus.Models.ExecutiveStatus>
+@using PagedList.Mvc;
+
+
+@{
+    int j = 1;
+
+
+    string idVal = "tab" + j;
+    <div class="container" id=@idVal>
+
+        <div class="table-responsive">
+            <table class="table-bordered table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>
+                            Client Name
+                        </th>
+                        <th>
+                            Project Priority
+                        </th>
+                        <th>
+                            Open Status
+                        </th>
+                        <th>
+                            Retail Aftersales
+                        </th>
+                        <th>
+                            Project Name
+                        </th>
+                        <th>
+                            Project Comments
+                        </th>
+                        <th>
+                            Project Type
+                        </th>
+                        <th>
+                            Start Date
+                        </th>
+                        <th>
+                            Planned End Date
+                        </th>
+                        <th>
+                            Actual End Date
+                        </th>
+                        <th>
+                            Project Description
+                        </th>
+                        <th>
+                            Project Status
+                        </th>
+                        <th>
+                            Project Constraints
+                        </th>
+                        <th>
+                            Schedule
+                        </th>
+                        <th>
+                            Budget
+                        </th>
+                        <th>
+                            Client Satisfaction
+                        </th>
+                        <th>
+                            Scope
+                        </th>
+                        <th>
+                            Resources
+                        </th>
+                        <th>
+                            Other Risk
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var status in Model)
+                    {
+                        <!--Add Edit Modal Data Toggle Attribute to tr so entire row is clickable-->
+                        <tr style="font-size: .75rem;" data-toggle="modal" data-target="#editModal" data-seqnum="@status.SEQ_NUM">
+                            <td>
+                                @Html.DisplayFor(modelItem => status.CLIENT_NAME)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => status.PROJECT_PRIORITY)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => status.OPEN_STATUS)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => status.RETAIL_AFTERSALES)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => status.PROJECT_NAME)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => status.PROJECT_COMMENTS)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => status.PROJECT_TYPE)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => status.START_DATE)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => status.PLANNED_END_DATE)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => status.ACTUAL_END_DATE)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => status.PROJECT_DESCRIPTION)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => status.PROJECT_STATUS)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => status.PROJECT_CONSTRAINTS)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => status.SCHEDULE)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => status.BUDGET)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => status.CLIENT_SATISFACTION)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => status.SCOPE)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => status.RESOURCES)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => status.OTHER_RISK)
+                            </td>
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+
+            Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+        </div>
+
+
+    </div>
+    j++;
+
+}
+

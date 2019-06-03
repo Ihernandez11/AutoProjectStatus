@@ -1,6 +1,6 @@
 ﻿(function () {
     //Main App
-    var app = angular.module("StatusTableModule", []);
+    var app = angular.module("StatusTableModule", ['ui.bootstrap']);
 
 
 
@@ -192,199 +192,64 @@
             $('table tbody tr#statusRow' + this.status.SEQ_NUM).popover('hide');
         };
 
-        //function to create checkboxes for project type list
-        function projectTypeListSplit(projectType) {
-            if (projectType) {
-                if (projectType.includes(',')) {
-                    projectType = projectType.split(',');
-
-                    for (var i = 0; i <= projectType.length; i++) {
-                        if (projectType[i]) {
-                            projectType[i] = projectType[i].trim();
-                        }
-                    }
-                }
-            }
-
-            return projectType;
-        }
-
-        //function to return a proper date that the input fields can read
-        function convertToDate(strDateValue) {
-            if (strDateValue) {
-                strDateValue = new Date(strDateValue);
-            }
-
-            return strDateValue;
-        }
-
-
-
         //update editModal with clicked status row values
         $scope.mapToEdit = function (statusList) {
-
-            //clear error message
-            $scope.editErrorMessage = "";
 
             //Put the statusList in a scope variable and then put the scope {{variable}} in the edit modal 
             $scope.editInputValues = statusList;
 
             //Convert the Project Types to an array to map each value to the corresponding checkbox
+            if ($scope.editInputValues.PROJECT_TYPE.includes(',')) {
+                $scope.editInputValues.PROJECT_TYPE = $scope.editInputValues.PROJECT_TYPE.split(',');
 
-            $scope.editInputValues.PROJECT_TYPE = projectTypeListSplit($scope.editInputValues.PROJECT_TYPE);
-
-            //Convert the Date fields to map to the date type input value
-            $scope.editInputValues.START_DATE = convertToDate($scope.editInputValues.START_DATE);
-            $scope.editInputValues.PLANNED_END_DATE = convertToDate($scope.editInputValues.PLANNED_END_DATE);
-            $scope.editInputValues.ACTUAL_END_DATE = convertToDate($scope.editInputValues.ACTUAL_END_DATE);
-
-        };
-
-        //function to get selected Project Types to turn into a comma delimited list for processing
-        $scope.editModalProjectTypeList = [];
-        $scope.cloneModalProjectTypeList = [];
-
-
-        $scope.getProjectTypeList = function (modalType) {
-            $('#' + modalType + ' input[type=checkbox]').each(function () {
-                if (this.checked) {
-                    if (modalType === "editModal") {
-                        $scope.editModalProjectTypeList.push(this.value);
+                for (var i = 0; i <= $scope.editInputValues.PROJECT_TYPE.length; i++) {
+                    if ($scope.editInputValues.PROJECT_TYPE[i]) {
+                        $scope.editInputValues.PROJECT_TYPE[i] = $scope.editInputValues.PROJECT_TYPE[i].trim();
                     }
-
-                    if (modalType === "cloneModal") {
-                        $scope.cloneModalProjectTypeList.push(this.value);
-                    }
-                    
                 }
-            });
-        };
-
-
-        //http post to /home/edit/
-        $scope.editStatus = function (status) {
-            
-            $scope.editModalProjectTypeList = [];
-            $scope.getProjectTypeList("editModal");
-
-            if (status) {
-                var statusToEdit = {
-                    SEQ_NUM: status.SEQ_NUM,
-                    CLIENT_NAME: status.CLIENT_NAME,
-                    PROJECT_PRIORITY: status.PROJECT_PRIORITY,
-                    OPEN_STATUS: status.OPEN_STATUS,
-                    RETAIL_AFTERSALES: status.RETAIL_AFTERSALES,
-                    PROJECT_NAME: status.PROJECT_NAME,
-                    PROJECT_COMMENTS: status.PROJECT_COMMENTS,
-                    ProjectTypeList: $scope.editModalProjectTypeList,
-                    START_DATE: status.START_DATE,
-                    PLANNED_END_DATE: status.PLANNED_END_DATE,
-                    ACTUAL_END_DATE: status.ACTUAL_END_DATE,
-                    PROJECT_DESCRIPTION: status.PROJECT_DESCRIPTION,
-                    PROJECT_STATUS: status.PROJECT_STATUS,
-                    PROJECT_CONSTRAINTS: status.PROJECT_CONSTRAINTS,
-                    SCHEDULE: status.SCHEDULE,
-                    BUDGET: status.BUDGET,
-                    CLIENT_SATISFACTION: status.CLIENT_SATISFACTION,
-                    SCOPE: status.SCOPE,
-                    RESOURCES: status.RESOURCES,
-                    OTHER_RISK: status.OTHER_RISK
-                };
             }
 
-            $http.post("/home/edit/", statusToEdit).then(function (response) {
-                console.log(response.data);
 
-                if (response.data.success === "true") {
-                    $window.location.href = response.data.redirectURL;
-                    $window.location.reload();
-                }
+            //Convert the Date fields to map to the date type input value
+            $scope.editInputValues.START_DATE = new Date($scope.editInputValues.START_DATE);
+            $scope.editInputValues.PLANNED_END_DATE = new Date($scope.editInputValues.PLANNED_END_DATE);
+            $scope.editInputValues.ACTUAL_END_DATE = new Date($scope.editInputValues.ACTUAL_END_DATE);
 
-                if (response.data.success === "false") {
-                    $scope.editErrorMessage = response.data.errorMessage;
-                }
-            });
         };
 
 
         //update cloneModal with clicked status row values
         $scope.mapToClone = function (statusList) {
 
-            $scope.insertErrorMessage = "";
 
             //Put the statusList in a scope variable and then put the scope {{variable}} in the edit modal 
             $scope.cloneInputValues = statusList;
 
             //Convert the Project Types to an array to map each value to the corresponding checkbox
-            $scope.cloneInputValues.PROJECT_TYPE = projectTypeListSplit($scope.cloneInputValues.PROJECT_TYPE);
+            if ($scope.cloneInputValues.PROJECT_TYPE.includes(',')) {
+                $scope.cloneInputValues.PROJECT_TYPE = $scope.cloneInputValues.PROJECT_TYPE.split(',');
+
+                for (var i = 0; i <= $scope.cloneInputValues.PROJECT_TYPE.length; i++) {
+                    if ($scope.cloneInputValues.PROJECT_TYPE[i]) {
+                        $scope.cloneInputValues.PROJECT_TYPE[i] = $scope.cloneInputValues.PROJECT_TYPE[i].trim();
+                    }
+                }
+            }
+
 
             //Convert the Date fields to map to the date type input value
-            $scope.cloneInputValues.START_DATE = convertToDate($scope.cloneInputValues.START_DATE);
-            $scope.cloneInputValues.PLANNED_END_DATE = convertToDate($scope.cloneInputValues.PLANNED_END_DATE);
-            $scope.cloneInputValues.ACTUAL_END_DATE = convertToDate($scope.cloneInputValues.ACTUAL_END_DATE);
+            $scope.cloneInputValues.START_DATE = new Date($scope.cloneInputValues.START_DATE);
+            $scope.cloneInputValues.PLANNED_END_DATE = new Date($scope.cloneInputValues.PLANNED_END_DATE);
+            $scope.cloneInputValues.ACTUAL_END_DATE = new Date($scope.cloneInputValues.ACTUAL_END_DATE);
 
         };
-
-        $scope.insertCloneStatus = function (status) {
-
-
-            $scope.cloneModalProjectTypeList = [];
-            $scope.getProjectTypeList("cloneModal");
-
-            if (status) {
-                var statusToClone = {
-                    SEQ_NUM: status.SEQ_NUM,
-                    CLIENT_NAME: status.CLIENT_NAME,
-                    PROJECT_PRIORITY: status.PROJECT_PRIORITY,
-                    OPEN_STATUS: status.OPEN_STATUS,
-                    RETAIL_AFTERSALES: status.RETAIL_AFTERSALES,
-                    PROJECT_NAME: status.PROJECT_NAME,
-                    PROJECT_COMMENTS: status.PROJECT_COMMENTS,
-                    ProjectTypeList: $scope.cloneModalProjectTypeList,
-                    START_DATE: status.START_DATE,
-                    PLANNED_END_DATE: status.PLANNED_END_DATE,
-                    ACTUAL_END_DATE: status.ACTUAL_END_DATE,
-                    PROJECT_DESCRIPTION: status.PROJECT_DESCRIPTION,
-                    PROJECT_STATUS: status.PROJECT_STATUS,
-                    PROJECT_CONSTRAINTS: status.PROJECT_CONSTRAINTS,
-                    SCHEDULE: status.SCHEDULE,
-                    BUDGET: status.BUDGET,
-                    CLIENT_SATISFACTION: status.CLIENT_SATISFACTION,
-                    SCOPE: status.SCOPE,
-                    RESOURCES: status.RESOURCES,
-                    OTHER_RISK: status.OTHER_RISK
-                };
-            }
-
-            $http.post("/home/cloneinsert/", statusToClone).then(function (response) {
-                console.log(response.data);
-
-                if (response.data.success === "true") {
-                    $window.location.href = response.data.redirectURL;
-                    $window.location.reload();
-                }
-
-                if (response.data.success === "false") {
-                    $scope.insertErrorMessage = response.data.errorMessage;
-                }
-            });
-        };
-
 
         //delete and then return back to the Index page using new URL
+
         $scope.mapToDelete = function (status) {
             if (status) {
-                //clear any outstanding error messages
-                $scope.deleteErrorMessage = "";
-                $scope.deleteSuccessMessage = "";
-
-                //map the status record to the popup modal input fields
                 $scope.statusToDelete = status;
             }
-        };
-
-        $scope.confirmDelete = function () {
-            $scope.deleteSuccessMessage = "Deleting...";
         };
 
         $scope.deleteStatus = function (status) {
@@ -397,7 +262,6 @@
                 }
 
                 if (response.data.success === "false") {
-                    $scope.deleteSuccessMessage = "";
                     $scope.deleteErrorMessage = "Unable to delete status record. Record may have already been deleted by somebody else.";
                 }
             });

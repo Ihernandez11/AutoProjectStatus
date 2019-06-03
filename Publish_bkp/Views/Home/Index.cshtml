@@ -10,11 +10,11 @@
     <div ng-controller="StatusTableController">
 
         @*<div class="jumbotron">
-                <h1>Automotive Project Status</h1>
-                <p class="lead">This site will be utilized to insert new project line items and update the status of existing project line items.</p>
+            <h1>Automotive Project Status</h1>
+            <p class="lead">This site will be utilized to insert new project line items and update the status of existing project line items.</p>
 
 
-            </div>*@
+        </div>*@
 
 
 
@@ -239,7 +239,7 @@
                                             @foreach (var item in Model.FirstOrDefault().GetAllProjectTypes())
                                             {
                                                 <div class="checkbox">
-                                                    <label><input name="ProjectTypeList" type="checkbox" value="@item">@item</label>
+                                                    <label><input name="ProjectTypeList" type="checkbox" value=@item>@item</label>
                                                 </div>
                                             }
                                         </div>
@@ -326,14 +326,16 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
-
                     </div>
 
+                    @using (Html.BeginForm("Edit", "Home", FormMethod.Post, new { name = "editForm" }))
+                    {
 
-                    <div ng-form name="editForm" class="ng-pristine ng-valid ng-valid-min ng-valid-maxlength">
+                        @Html.AntiForgeryToken()
+
+                        <input data-val="true" data-val-number="The field SEQ_NUM must be a number." data-val-required="The SEQ_NUM field is required." id="SEQ_NUM" name="SEQ_NUM" type="hidden" value="{{editInputValues.SEQ_NUM}}">
 
 
-                        <input data-val="true" id="SEQ_NUM" name="SEQ_NUM" type="hidden" value="{{editInputValues.SEQ_NUM}}">
 
                         <div class="modal-body">
                             <div class="container-fluid">
@@ -366,7 +368,7 @@
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            @Html.LabelFor(m => m.FirstOrDefault().PROJECT_NAME, "Project Name*", new { @class = "col-form-label" })
+                                            @Html.LabelFor(m => m.FirstOrDefault().PROJECT_NAME, "Project Name", new { @class = "col-form-label" })
                                             <div ng-show="editForm.$submitted || editForm.PROJECT_NAME.$touched">
                                                 <small class="text-danger" ng-show="editForm.PROJECT_NAME.$error.maxlength">Value must not exceed 118 characters.</small>
                                             </div>
@@ -377,7 +379,7 @@
                                             @foreach (var item in Model.FirstOrDefault().GetAllProjectTypes())
                                             {
                                                 <div class="checkbox">
-                                                    <label><input name="ProjectTypeList" type="checkbox" id="ProjectTypeList" value="@item" ng-checked="editInputValues.PROJECT_TYPE.includes('@item')">@item</label> 
+                                                    <label><input name="ProjectTypeList" type="checkbox" id="PROJECT_TYPE" value="@item" ng-checked="editInputValues.PROJECT_TYPE.includes('@item')">@item</label>
                                                 </div>
                                             }
                                         </div>
@@ -413,66 +415,57 @@
                                             <input type="date" class="form-control" id="ACTUAL_END_DATE" name="ACTUAL_END_DATE" ng-model="editInputValues.ACTUAL_END_DATE">
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-form-label" for="PROJECT_CONSTRAINTS">Project Constraints*</label>
+                                            <label class="col-form-label" for="PROJECT_CONSTRAINTS">Project Constraints</label>
                                             <select class="form-control" id="PROJECT_CONSTRAINTS" name="PROJECT_CONSTRAINTS" ng-model="editInputValues.PROJECT_CONSTRAINTS">
                                                 <option ng-repeat="pc in editInputValues.ProjectContstraintValues" value="{{pc.Value}}">{{pc.Value}}</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-form-label" for="SCHEDULE">Schedule*</label>
+                                            <label class="col-form-label" for="SCHEDULE">Schedule</label>
                                             <select class="form-control" id="SCHEDULE" name="SCHEDULE" ng-model="editInputValues.SCHEDULE">
                                                 <option ng-repeat="sch in editInputValues.ScheduleValues" value="{{sch.Value}}">{{sch.Value}}</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-form-label" for="BUDGET">Budget*</label>
+                                            <label class="col-form-label" for="BUDGET">Budget</label>
                                             <select class="form-control" id="BUDGET" name="BUDGET" ng-model="editInputValues.BUDGET">
                                                 <option ng-repeat="bgt in editInputValues.BudgetValues" value="{{bgt.Value}}">{{bgt.Value}}</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-form-label" for="CLIENT_SATISFACTION">Client Satisfaction*</label>
+                                            <label class="col-form-label" for="CLIENT_SATISFACTION">Client Satisfaction</label>
                                             <select class="form-control" id="CLIENT_SATISFACTION" name="CLIENT_SATISFACTION" ng-model="editInputValues.CLIENT_SATISFACTION">
                                                 <option ng-repeat="csf in editInputValues.ClientSatisfactionValues" value="{{csf.Value}}">{{csf.Value}}</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-form-label" for="SCOPE">Scope*</label>
+                                            <label class="col-form-label" for="SCOPE">Scope</label>
                                             <select class="form-control" id="SCOPE" name="SCOPE" ng-model="editInputValues.SCOPE">
                                                 <option ng-repeat="scope in editInputValues.ScopeValues" value="{{scope.Value}}">{{scope.Value}}</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-form-label" for="RESOURCES">Resources*</label>
+                                            <label class="col-form-label" for="RESOURCES">Resources</label>
                                             <select class="form-control" id="RESOURCES" name="RESOURCES" ng-model="editInputValues.RESOURCES">
                                                 <option ng-repeat="rsc in editInputValues.ResourceValues" value="{{rsc.Value}}">{{rsc.Value}}</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-form-label" for="OTHER_RISK">Other Risk*</label>
+                                            <label class="col-form-label" for="OTHER_RISK">Other Risk</label>
                                             <select class="form-control" id="OTHER_RISK" name="OTHER_RISK" ng-model="editInputValues.OTHER_RISK">
                                                 <option ng-repeat="risk in editInputValues.OtherRiskValues" value="{{risk.Value}}">{{risk.Value}}</option>
                                             </select>
                                         </div>
-                                        <br />
-                                        <p>* denotes a required field</p>
-                                        <p class="text-danger">{{editErrorMessage}}</p>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
-
                         <div class="modal-footer">
-
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <span ng-show="editForm.$invalid">
-                                <button type="button" value="Save" class="btn btn-primary" disabled>Save</button>
-                            </span>
-                            <span ng-show="editForm.$valid">
-                                <button type="button" value="Save" class="btn btn-primary" ng-click="editStatus(editInputValues)">Save</button>
-                            </span>
+                            <input type="submit" value="Save" class="btn btn-primary" ng-disabled="editForm.$invalid" />
                         </div>
-                    </div>
+                    }
                 </div>
             </div>
         </div>
@@ -488,8 +481,9 @@
                         </button>
                     </div>
 
-                    <div ng-form name="cloneForm" class="ng-pristine ng-valid ng-valid-min ng-valid-maxlength">
 
+                    @using (Html.BeginForm("Insert", "Home", FormMethod.Post, new { name = "cloneForm" }))
+                    {
                         <div class="modal-body">
                             <div class="container-fluid">
                                 <div class="row">
@@ -521,7 +515,7 @@
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            @Html.LabelFor(m => m.FirstOrDefault().PROJECT_NAME, "Project Name*", new { @class = "col-form-label" })
+                                            @Html.LabelFor(m => m.FirstOrDefault().PROJECT_NAME, "Project Name", new { @class = "col-form-label" })
                                             <div ng-show="cloneForm.$submitted || cloneForm.PROJECT_NAME.$touched">
                                                 <small class="text-danger" ng-show="cloneForm.PROJECT_NAME.$error.maxlength">Value must not exceed 118 characters.</small>
                                             </div>
@@ -532,7 +526,7 @@
                                             @foreach (var item in Model.FirstOrDefault().GetAllProjectTypes())
                                             {
                                                 <div class="checkbox">
-                                                    <label><input name="ProjectTypeList" type="checkbox" id="ProjectTypeList" value="@item" ng-checked="cloneInputValues.PROJECT_TYPE.includes('@item')">@item</label>
+                                                    <label><input name="ProjectTypeList" type="checkbox" id="PROJECT_TYPE" value="@item" ng-checked="cloneInputValues.PROJECT_TYPE.includes('@item')">@item</label>
                                                 </div>
                                             }
                                         </div>
@@ -568,65 +562,58 @@
                                             <input type="date" class="form-control" id="ACTUAL_END_DATE" name="ACTUAL_END_DATE" ng-model="cloneInputValues.ACTUAL_END_DATE">
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-form-label" for="PROJECT_CONSTRAINTS">Project Constraints*</label>
+                                            <label class="col-form-label" for="PROJECT_CONSTRAINTS">Project Constraints</label>
                                             <select class="form-control" id="PROJECT_CONSTRAINTS" name="PROJECT_CONSTRAINTS" ng-model="cloneInputValues.PROJECT_CONSTRAINTS">
                                                 <option ng-repeat="pc in cloneInputValues.ProjectContstraintValues" value="{{pc.Value}}">{{pc.Value}}</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-form-label" for="SCHEDULE">Schedule*</label>
+                                            <label class="col-form-label" for="SCHEDULE">Schedule</label>
                                             <select class="form-control" id="SCHEDULE" name="SCHEDULE" ng-model="cloneInputValues.SCHEDULE">
                                                 <option ng-repeat="sch in cloneInputValues.ScheduleValues" value="{{sch.Value}}">{{sch.Value}}</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-form-label" for="BUDGET">Budget*</label>
+                                            <label class="col-form-label" for="BUDGET">Budget</label>
                                             <select class="form-control" id="BUDGET" name="BUDGET" ng-model="cloneInputValues.BUDGET">
                                                 <option ng-repeat="bgt in cloneInputValues.BudgetValues" value="{{bgt.Value}}">{{bgt.Value}}</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-form-label" for="CLIENT_SATISFACTION">Client Satisfaction*</label>
+                                            <label class="col-form-label" for="CLIENT_SATISFACTION">Client Satisfaction</label>
                                             <select class="form-control" id="CLIENT_SATISFACTION" name="CLIENT_SATISFACTION" ng-model="cloneInputValues.CLIENT_SATISFACTION">
                                                 <option ng-repeat="csf in cloneInputValues.ClientSatisfactionValues" value="{{csf.Value}}">{{csf.Value}}</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-form-label" for="SCOPE">Scope*</label>
+                                            <label class="col-form-label" for="SCOPE">Scope</label>
                                             <select class="form-control" id="SCOPE" name="SCOPE" ng-model="cloneInputValues.SCOPE">
                                                 <option ng-repeat="scope in cloneInputValues.ScopeValues" value="{{scope.Value}}">{{scope.Value}}</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-form-label" for="RESOURCES">Resources*</label>
+                                            <label class="col-form-label" for="RESOURCES">Resources</label>
                                             <select class="form-control" id="RESOURCES" name="RESOURCES" ng-model="cloneInputValues.RESOURCES">
                                                 <option ng-repeat="rsc in cloneInputValues.ResourceValues" value="{{rsc.Value}}">{{rsc.Value}}</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-form-label" for="OTHER_RISK">Other Risk*</label>
+                                            <label class="col-form-label" for="OTHER_RISK">Other Risk</label>
                                             <select class="form-control" id="OTHER_RISK" name="OTHER_RISK" ng-model="cloneInputValues.OTHER_RISK">
                                                 <option ng-repeat="risk in cloneInputValues.OtherRiskValues" value="{{risk.Value}}">{{risk.Value}}</option>
                                             </select>
                                         </div>
-                                        <br />
-                                        <p>* denotes a required field</p>
-                                        <p class="text-danger">{{insertErrorMessage}}</p>
                                     </div>
                                 </div>
 
                             </div>
                         </div>
+
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <span ng-show="cloneForm.$invalid">
-                                <button type="button" value="Save" class="btn btn-primary" disabled>Save</button>
-                            </span>
-                            <span ng-show="cloneForm.$valid">
-                                <button type="button" value="Save" class="btn btn-primary" ng-click="insertCloneStatus(cloneInputValues)">Save</button>
-                            </span>
+                            <input type="submit" value="Save" class="btn btn-primary" ng-disabled="cloneForm.$invalid" />
                         </div>
-                    </div>
+                    }
                 </div>
             </div>
         </div>
@@ -641,25 +628,21 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-
-                    <div class="modal-body">
-                        <div class="container-fluid">
-                            <div class="row">
-                                <p>Are you sure you want to delete <b>{{statusToDelete.PROJECT_NAME}}</b>?</p>                                
-                            </div>
-                            <div class="row">
-                                <div ng-show="deleteSuccessMessage"><p class="text-success"><i class="fas fa-spinner fa-spin"></i> {{deleteSuccessMessage}}</p></div>
-
-                                <div ng-show="deleteErrorMessage"><p class="text-danger"><i class="fas fa-exclamation-triangle"></i> {{deleteErrorMessage}}</p></div>
+                    
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <p>Are you sure you want to delete <b>{{statusToDelete.PROJECT_NAME}}</b>?</p>
+                                    <p class="text-danger">{{deleteErrorMessage}}</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary" ng-click="deleteStatus(statusToDelete);confirmDelete()">Delete</button>
-                    </div>
-
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" ng-click="deleteStatus(statusToDelete)">Delete</button>
+                        </div>
+                    
                 </div>
             </div>
         </div>

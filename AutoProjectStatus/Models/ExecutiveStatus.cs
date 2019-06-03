@@ -140,10 +140,10 @@ namespace AutoProjectStatus.Models
         {
             return new List<string>
             {
+                "None",
                 "Budget",
                 "Client Commitment",
                 "Management Commitment",
-                "None",
                 "Resources Needed",
                 "Scope Creep",
                 "STS Delays (Hardware/Software)"
@@ -155,11 +155,12 @@ namespace AutoProjectStatus.Models
         {
             return new List<string>
             {
+                "5-Healthy",
                 "1-Concerns Realize",
                 "2-Major Concerns",
                 "3-Warning",
-                "4-Early Warning",
-                "5-Healthy"
+                "4-Early Warning"
+                
             };
         }
 
